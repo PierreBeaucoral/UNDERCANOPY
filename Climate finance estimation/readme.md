@@ -68,7 +68,7 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
    - Execute `Relevance_classifier.py` or related scripts to fine-tune and evaluate the models.
    - Execute `Multi-classifier.py` or related scripts to fine-tune and evaluate the models.
    - Execute `Classify.py` to run the classification pipeline.
-   - Execute `Meta.py` to run the classification pipeline.
+   - Execute `Meta.py` to run the meta categories pipeline.
    - Execute `Graph_Final.py` to run the classification pipeline.
 
 
