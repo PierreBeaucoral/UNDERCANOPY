@@ -11,7 +11,7 @@ This codebase is organized into several modules, each responsible for a distinct
 ### **EstimationClimateFinance.py**  
 The script is designed to replicate data preprocessing pipeline for climate finance classification. It:
 
- - Loads and preprocesses an initial projects clustering dataset.
+ - Loads and preprocesses an initial projects clustering dataset (available in [following link](https://drive.uca.fr/d/6058b184ba134a02a708/)).
  - Filters projects based on topic codes to isolate climate-related projects.
  - Renames project labels based on topic values and manually updates a subset of indices.
  - Samples projects proportionally from each climate topic group.
