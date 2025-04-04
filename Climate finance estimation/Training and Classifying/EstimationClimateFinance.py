@@ -10,12 +10,12 @@ import pandas as pd
 import os
 
 # Step 1: Set up the working directory
-wd = "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance/"
+wd = ""
 os.chdir(wd)
 
 # Step 2: Load the first CSV file with low_memory=False to prevent DtypeWarnings
 try:
-    df1 = pd.read_csv('/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/ML clustering aid activities/outputbig/projects_clusters.csv')
+    df1 = pd.read_csv('Raw Data/projects_clusters.csv')
 except FileNotFoundError:
     print("File not found. Please check the file path.")
     raise
@@ -24,7 +24,7 @@ except FileNotFoundError:
 climate_adaptation = df1[df1['Topic'] == 5].copy().reset_index(drop=True)
 
 # Optionally, save the climate_adaptation DataFrame to a CSV file for future reference
-climate_adaptation_output_path = '/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/ML clustering aid activities/climate_adaptation_projects.csv'
+climate_adaptation_output_path = './Data/climate_adaptation_projects.csv'
 climate_adaptation.to_csv(climate_adaptation_output_path, index=False)
 
 print(f"Climate Adaptation DataFrame saved to {climate_adaptation_output_path}")
@@ -35,7 +35,7 @@ filtered_df1 = df1[df1['Topic'].isin(Climate_Topics)].copy()
 
 # Save the projects that are not in Climate_Topics
 non_climate_df1 = df1[~df1['Topic'].isin(Climate_Topics)].drop_duplicates(subset='raw_text').copy()
-non_climate_output_path = '/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/ML clustering aid activities/non_climate_projects.csv'
+non_climate_output_path = './Data/non_climate_projects.csv'
 non_climate_df1.to_csv(non_climate_output_path, index=False)
 
 # Step 4: Rename 'CustomName' based on 'Topic' values and add 'relevance' column
@@ -56,7 +56,7 @@ else:
 
 filtered_df1['relevance'] = 1
 
-climate_projects_output_path = '/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/ML clustering aid activities/climate_projects.csv'
+climate_projects_output_path = './Data/climate_projects.csv'
 filtered_df1.to_csv(climate_projects_output_path, index=False)
 
 # Step 5: Remove duplicates based on the 'raw_text' column
@@ -83,7 +83,7 @@ sampled_df1 = sampled_df1.rename(columns={'raw_text': 'text', 'CustomName': 'lab
 
 # Step 11: Load the second CSV file
 try:
-    df2 = pd.read_csv(os.path.join(wd, 'Data/Estimation of Climate Finance/train_set.csv'))
+    df2 = pd.read_csv(os.path.join(wd, '/train_set.csv'))
 except FileNotFoundError:
     print("File not found. Please check the file path.")
     raise
@@ -251,6 +251,6 @@ print(f"Final count - Relevance 1: {num_relevance_1_final}, Relevance 0: {num_re
 
     
 # Save the complete climate finance data
-merged_df.to_csv(wd + 'Data/Estimation of Climate Finance/train_set.csv', encoding='utf8', index=False, header=True)
+merged_df.to_csv(wd + 'Data/train_set.csv', encoding='utf8', index=False, header=True)
 
 print("Final balanced dataset saved")
