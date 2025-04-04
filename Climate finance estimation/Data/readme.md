@@ -29,7 +29,7 @@ Each of these sources is described in detail below.
 - **Role in Pipeline:**  
   The raw project data is grouped by unique text and donor code. It serves as the foundation for extracting, filtering, and ultimately classifying projects as climate finance–relevant or not.
 
-### 2. Training Set for Climate Finance Classification
+### 2. Training Data for Climate Finance Classification
 - **File Path:**  
   `Data/Estimation of Climate Finance/train_set.csv`
 - **Description:**  
@@ -44,7 +44,7 @@ Each of these sources is described in detail below.
 - **File Path:**  
   `reverse_dictionary_classes.json`
 - **Description:**  
-  This JSON file stores a dictionary that maps numeric class labels (produced by the multiclass classifier) to human-readable, descriptive labels.  
+  This JSON file stores a dictionary that maps numeric class labels (produced by the multiclass classifier) to human-readable, descriptive labels.
 - **Role in Pipeline:**  
   During inference, the multiclass predictions (numeric) are converted into interpretable labels using this mapping, which is crucial for generating understandable classification reports and summaries.
 
@@ -63,6 +63,19 @@ Each of these sources is described in detail below.
   This file contains the weights for the multiclass classifier trained to assign detailed climate finance categories to relevant projects.
 - **Role in Pipeline:**  
   Once a project is deemed relevant by the relevance classifier, the multiclass classifier (loaded with these weights) assigns a fine-grained climate category. The numeric predictions are then mapped to descriptive labels using the reverse label dictionary.
+
+---
+
+## Additional Data Storage
+
+Due to the large size of some intermediate and final datasets used in this research, several key data files are not stored directly in this GitHub repository. Instead, they are hosted on an external drive and include:
+- **DataPB.csv**
+- **Data.csv**
+- **ClassifiedCRS.csv**
+- **ClimateFinanceTotal.csv**
+- **Saved Model Weights:** Both `saved_weights_relevance.pt` and `saved_weights_multiclass.pt`
+
+You can access these files at [the following link](https://drive.uca.fr/d/6058b184ba134a02a708/)
 
 ---
 
