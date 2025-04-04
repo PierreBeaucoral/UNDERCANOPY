@@ -86,7 +86,7 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
 ## Academic Context
 
 
-This project is based on the methodology of Toetzke et al. (2022) and extends their work by integrating advanced data preprocessing, machine learning, and forecasting techniques for climate finance estimation. The pipeline is designed for:
+This project is based on the methodology of Toetzke et al. (2022) and replactes and extends their work by integrating advanced data preprocessing, machine learning, and forecasting techniques for climate finance estimation. The pipeline is designed for:
 - **Reproducibility:** Detailed logging, fixed random seeds, and standardized data splits ensure that the analysis can be replicated by other researchers.
 - **Robustness:** The use of ensemble methods, transformer models, and rigorous data cleaning supports reliable and high-quality analysis.
 - **Transparency:** Comprehensive documentation and open access to the processed data (via an external drive) promote transparency and collaborative research.
