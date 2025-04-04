@@ -85,7 +85,14 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
 
 ## Academic Context
 
-This project has been developed as part of high-standard academic research into climate finance. By combining rigorous data preprocessing, advanced transformer-based classification, and robust time series forecasting, the pipeline provides reproducible and transparent analyses of aid activities. The modular design and detailed documentation support peer review, reproducibility, and potential extension by other researchers.
+
+This project is based on the methodology of Toetzke et al. (2022) and extends their work by integrating advanced data preprocessing, machine learning, and forecasting techniques for climate finance estimation. The pipeline is designed for:
+- **Reproducibility:** Detailed logging, fixed random seeds, and standardized data splits ensure that the analysis can be replicated by other researchers.
+- **Robustness:** The use of ensemble methods, transformer models, and rigorous data cleaning supports reliable and high-quality analysis.
+- **Transparency:** Comprehensive documentation and open access to the processed data (via an external drive) promote transparency and collaborative research.
+
+For more details on the foundational work, please refer to the related repository by Toetzke et al. (2022):  
+[https://github.com/MalteToetzke/consistent-and-replicable-estimation-of-bilateral-climate-finance/tree/main](https://github.com/MalteToetzke/consistent-and-replicable-estimation-of-bilateral-climate-finance/tree/main)
 
 ---
 
