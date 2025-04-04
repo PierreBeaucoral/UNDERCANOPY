@@ -1,96 +1,102 @@
-# OECD CRS Data Preprocessing and Meta-Categorization Pipeline
+# Data Preprocessing Script – Raw Text Consolidation for CRS Data
 
-This repository contains a two-stage R processing pipeline that prepares raw OECD CRS data for subsequent climate finance analyses. The pipeline consists of:
-
-1. **UploadBase.R:**  
-   The first script in the pipeline that loads, cleans, and merges the raw text files from the OECD CRS database. It produces a unified dataset (`DataPB.csv`) as well as a smaller subsample (`DataPBsample.csv`) for beta-testing purposes.
-
-2. **Meta-Categorization Script (this script):**  
-   This script loads the previously generated classified dataset (`ClassifiedCRS.csv`), assigns meta-categories (Adaptation, Mitigation, Environment) based on detailed classification numbers, and performs data integrity checks before saving the final cleaned dataset.
-
-> **Important:**  
-> The raw data files (text files) must be downloaded directly from the OECD website. Place these files in the appropriate directories (e.g., `./Data/CRS/`) as expected by the pipeline.
+This R script is the second stage in the overall data preparation pipeline for climate finance analysis. It builds upon the output of the first script (UploadBase.R) by further cleaning, filtering, and consolidating the raw OECD CRS data. The goal is to generate a unified dataset with a single text field (`raw_text`) that combines project titles and descriptions. This dataset is then saved for subsequent analyses and model development.
 
 ---
 
-## UploadBase.R
+## Overview
 
-**Purpose:**  
-The `UploadBase.R` script is responsible for:
-- Setting the working environment.
-- Loading multiple raw data files (both annual and multi-year) from the OECD CRS database using the `fread()` function.
-- Combining the annual and multi-year datasets into a single, comprehensive data frame.
-- Cleaning and standardizing text data:
-  - Concatenating project titles and descriptions into a single `raw_text` field.
-  - Converting all text to lowercase and removing extraneous characters (e.g., underscores).
-  - Removing unwanted entries based on specific patterns (e.g., "semi-aggregates", "sectors not specified").
-- Generating a full dataset (`DataPB.csv`) and a smaller random subsample (`DataPBsample.csv`) for testing.
+This script performs the following key tasks:
 
-**How It Works:**  
-- **Working Directory Setup:**  
-  The script clears the current environment and sets the working directory.
-- **Data Loading:**  
-  It reads annual datasets (e.g., "CRS 2006 Data.txt", …, "CRS 2023 Data.txt") and multi-year datasets (e.g., "CRS 1973-94 data.txt", "CRS 1995-99 data.txt", etc.).
-- **Data Merging:**  
-  Datasets are grouped by year and merged into a single data frame.
-- **Text Processing:**  
-  The script concatenates key text fields (ProjectTitle, ShortDescription, LongDescription) into a unified `raw_text` field, converts text to lowercase, and removes duplicates.
-- **Output:**  
-  Finally, it writes the cleaned and merged data to CSV files (`DataPB.csv` and `DataPBsample.csv`).
+1. **Environment and Working Directory Setup:**  
+   - Clears the current workspace.
+   - Sets the working directory to the desired location.
+   - Verifies that the current working directory is correct, and if not, changes it accordingly.
+
+2. **Data Import from UploadBase.R:**  
+   - Sources the `UploadBase.R` script, which loads multiple raw data files into a list object (`BDD`).  
+   - The script then calls garbage collection to free up memory.
+
+3. **Data Filtering:**  
+   - For each dataset in the list `BDD`, rows that lack essential identifiers (i.e., missing values in `Year`, `DonorCode`, or `RecipientCode`) are dropped.
+   - The environment is then cleaned to retain only key objects (`BDD`, `Bound`, and `Period`).
+
+4. **Creation of a Unified Text Field (`raw_text`):**  
+   - Each dataset is processed to select columns of interest (e.g., project titles, short and long descriptions, donor information, funding data, and climate indicators).
+   - Rows with missing text fields (i.e., `ProjectTitle`, `ShortDescription`, or `LongDescription`) are filtered out.
+   - The `unite()` function is applied twice to concatenate these columns into a single column called `raw_text`.
+   - All text is converted to lowercase for consistency.
+
+5. **Data Consolidation and Cleaning:**  
+   - The processed datasets from the list are merged (using `rbind`) into a single data frame (`Data`).
+   - Duplicate records are removed using the `distinct()` function.
+   - The dataset is further filtered to remove rows containing unwanted phrases such as "semi-aggregates" and "sectors not specified".
+   - Underscores in the `raw_text` field are removed to enhance text quality.
+
+6. **Subsampling for Beta Testing:**  
+   - A random subsample of 10,000 records is created (for rapid beta testing of downstream analyses).
+   - Both the full consolidated dataset and the beta sample are saved as CSV files using a pipe (`|`) as the delimiter.
 
 ---
 
-## Meta-Categorization Script
+## Detailed Workflow
 
-**Purpose:**  
-This script refines the dataset produced by the earlier steps by assigning high-level meta-categories to each project and verifying data integrity.
+1. **Clearing and Setting the Environment:**  
+   - The script begins by clearing all objects from the R environment.
+   - It then defines and checks the desired working directory, changing it if necessary.
 
-**Key Steps:**
+2. **Importing Data:**  
+   - The `UploadBase.R` script is sourced, which loads raw CRS data into the variable `BDD` (a list of data frames) along with additional objects (`Bound`, `Period`).
+   - Memory is freed using `gc()` after loading the data.
 
-1. **Data Loading:**  
-   - Uses a custom function `csv_import` to load the classified dataset (`ClassifiedCRS.csv`) from the specified directory.
-   - Drops rows with missing values in the `climate_class_number` column.
-   - Performs an initial check on the dataset’s size to ensure adequate volume.
+3. **Filtering Data of Interest:**  
+   - The script applies a function to each element of `BDD` to drop rows where `Year`, `DonorCode`, or `RecipientCode` are missing.
+   - All other objects, except for `BDD`, `Bound`, and `Period`, are removed from the environment to conserve memory.
 
-2. **Meta-Category Assignment:**  
-   - Three sets of numeric category codes are defined:
-     - **Adaptation:** `[10, 13]`
-     - **Environment:** `[0, 1, 2, 5, 9, 12, 14, 15]`
-     - **Mitigation:** `[3, 4, 6, 7, 8, 11, 16]`
-   - A new column, `meta_category`, is created and initialized to `"None"`.
-   - Rows are assigned to the appropriate meta-category based on their `climate_class_number`.
-   - The script prints the count of rows for each meta-category.
+4. **Creating the `raw_text` Variable:**  
+   - For every dataset in `BDD`, a subset of columns (including project titles, short descriptions, long descriptions, and funding details) is selected.
+   - Rows missing any critical text fields are excluded.
+   - The `unite()` function is used twice:
+     - First, to combine `ProjectTitle` and `ShortDescription`.
+     - Then, to combine the result with `LongDescription` into a single column named `raw_text`.
+   - The text is transformed to lowercase to standardize the dataset.
 
-3. **Data Integrity Checks:**  
-   - It identifies rows with missing `climate_class_number` and groups data by `raw_text` to check for inconsistencies (e.g., mixed NA and non-NA values).
-   - A warning is printed if there are any missing values in `climate_class_number`.
-   - The script verifies that all rows with `meta_category` remaining as `"None"` correspond exactly to non-relevant projects (`climate_relevance == 0`).
-   - It ensures that the total number of rows remains unchanged during processing, and exits if not.
+5. **Consolidating the Processed Data:**  
+   - The individual data frames in the processed list are combined into one data frame (`Data`) using `rbind`.
+   - Duplicate rows are removed.
+   - Additional filtering is performed to remove rows containing certain phrases (e.g., "semi-aggregates", "sectors not specified").
+   - Any underscores in the `raw_text` field are removed.
 
-4. **Saving the Final Dataset:**  
-   - After successful verification, the processed dataset (now including the `meta_category` column) is saved as `climate_finance_total.csv` using a pipe (`|`) as the delimiter.
+6. **Creating a Beta Subsample and Saving Data:**  
+   - A random sample of 10,000 rows is selected from `Data` for beta testing.
+   - The full dataset is saved as `DataPB.csv` and the beta subsample as `DataPBsample.csv` in the `Data` folder, using the pipe (`|`) as the field delimiter.
 
 ---
 
 ## Replication Instructions
 
-1. **Download and Place Data Files:**  
-   - Download the raw OECD CRS text files from the OECD website and place them in the expected folder (e.g., `./Data/CRS/`).
-   - Run `UploadBase.R` to generate the initial cleaned datasets (`DataPB.csv` and `DataPBsample.csv`).
+1. **Download Required Data Files:**  
+   - Before running this script, download the original CRS data files from the OECD website as instructed in the documentation for `UploadBase.R`. Ensure these files are placed in the expected directory structure.
 
-2. **Set Up Your Environment:**  
-   - Ensure that R and the required packages (`data.table`, `dplyr`, and `ggplot2`) are installed.
-   - Set the working directory to `/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Travaux CRS` or modify the script accordingly.
+2. **Run the UploadBase.R Script:**  
+   - First, run `UploadBase.R` to load and combine the raw data files. This script initializes the list `BDD` and other necessary objects.
 
-3. **Run the Meta-Categorization Script:**  
-   - Execute the meta-categorization script:
+3. **Set Up Your R Environment:**  
+   - Open R or RStudio and install the required packages (e.g., `data.table`, `dplyr`, `ggplot2`) if they are not already installed.
+   - Set the working directory to:
      ```r
-     source("YourMetaCategorizationScript.R")
+     "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Travaux CRS"
      ```
-   - The script will load the `ClassifiedCRS.csv` file, assign meta-categories, perform integrity checks, and save the final dataset to `Data/climate_finance_total.csv`.
 
-4. **Verify Outputs:**  
-   - Monitor console messages to confirm that the working directory is correctly set, data processing steps are executed, and integrity checks pass.
-   - Confirm that the output CSV files are correctly generated in the `Data` folder.
+4. **Execute the Script:**  
+   - Run this script (source it) by:
+     ```r
+     source("YourScriptName.R")
+     ```
+   - The script will process the data, create the unified `raw_text` variable, remove unwanted rows, and save the processed datasets as CSV files.
+
+5. **Verify the Output:**  
+   - Check the console for messages indicating the working directory status and memory clean-up.
+   - Verify that `DataPB.csv` and `DataPBsample.csv` are created in the `Data` folder.
 
 ---
