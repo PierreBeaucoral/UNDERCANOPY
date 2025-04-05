@@ -38,7 +38,7 @@ else:
 logging.info(f"Using device: {device}")
 
 # Working directory
-wd = "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance/"
+wd = ".../Data/"
 os.chdir(wd)
 
 # Hyperparameters
@@ -61,7 +61,7 @@ training_args = {
     "n_words": n_words}
 
 # Load dataset
-path = os.path.join(wd, "Data/Estimation of Climate Finance/train_set.csv")
+path = os.path.join(wd, "train_set.csv")
 df = pd.read_csv(path, delimiter=";")
 
 # Data preparation function
@@ -278,7 +278,7 @@ for epoch in range(num_train_epochs):
         best_val_loss = val_loss
         patience_counter = 0
         # Save the model
-        torch.save(model.state_dict(), os.path.join(wd, 'Data/Estimation of Climate Finance/saved_weights_multiclass.pt'))
+        torch.save(model.state_dict(), os.path.join(wd, 'saved_weights_multiclass.pt'))
         logging.info("Model saved.")
     else:
         patience_counter += 1
@@ -287,7 +287,7 @@ for epoch in range(num_train_epochs):
             break
 
 # Load best model
-model.load_state_dict(torch.load(os.path.join(wd, 'Data/Estimation of Climate Finance/saved_weights_multiclass.pt')))
+model.load_state_dict(torch.load(os.path.join(wd, 'saved_weights_multiclass.pt')))
 
 # Get predictions for test data
 with torch.no_grad():
