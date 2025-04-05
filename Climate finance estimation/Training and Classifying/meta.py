@@ -3,7 +3,7 @@ import os
 import sys 
 
 # Set the working directory
-wd = "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance/"
+wd = ".../Data/"
 os.chdir(wd)
 
 def csv_import(name, delimiter=","):
@@ -12,7 +12,7 @@ def csv_import(name, delimiter=","):
                            "USD_Disbursement_Defl": float} )
     return x
 
-df = csv_import(wd + "data/Estimation of Climate Finance/ClassifiedCRS.csv")
+df = csv_import(wd + "ClassifiedCRS.csv")
 
 df = df.dropna(subset=['climate_class_number'])
 
@@ -77,4 +77,4 @@ else:
     print("End Shape: ", length_end)
     sys.exit()
 
-df.to_csv(wd + '/Data/climate_finance_total.csv', encoding='utf8', index=False, header=True, sep='|')
+df.to_csv(wd + 'climate_finance_total.csv', encoding='utf8', index=False, header=True, sep='|')
