@@ -9,7 +9,7 @@ This repository, part of the UNDERCANOPY project, provides a comprehensive, mult
 The Climate Finance Estimation pipeline is organized into several interrelated components:
 
 1. **Data Preprocessing and Consolidation (R Scripts):**  
-   - **UploadBase.R:**  
+   - **Treatment and UploadBase.R:**  
      Loads, cleans, and merges raw OECD CRS data (annual and multi-year files) into unified CSV files.  
      - Combines project titles and descriptions into a single text field.
      - Removes duplicates and unwanted entries.
@@ -24,6 +24,8 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
        A deep learning model (using a ClimateBERT variant) that distinguishes between climate-relevant and non-relevant projects.
      - **Multiclass Classifier:**  
        Fine-tunes a pre-trained transformer to assign detailed climate finance categories to relevant projects.
+     - **Data Post-Processing:**
+       Classify the overall dataset regarding climate component of projects' description
      - **Data Post-Processing:**  
        Merges classification outputs with the original data and aggregates funding information by category.
 
@@ -49,7 +51,7 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
 
 ### Data Preparation
 1. **Download Raw Data:**  
-   Obtain the original OECD CRS raw text files (annual and multi-year) from the OECD website. Place them in the `Data/CRS/` folder.
+   Obtain the original OECD CRS raw text files (annual and multi-year) from the OECD website. Place them in the `Raw Data` folder.
 2. **Run R Preprocessing:**  
    - First, execute `Treatment.R` to load and merge the raw CRS files.
   
@@ -91,8 +93,7 @@ This project is based on the methodology of Toetzke et al. (2022) and replactes 
 - **Robustness:** The use of ensemble methods, transformer models, and rigorous data cleaning supports reliable and high-quality analysis.
 - **Transparency:** Comprehensive documentation and open access to the processed data (via an external drive) promote transparency and collaborative research.
 
-For more details on the foundational work, please refer to the related repository by Toetzke et al. (2022):  
-[https://github.com/MalteToetzke/consistent-and-replicable-estimation-of-bilateral-climate-finance/tree/main](https://github.com/MalteToetzke/consistent-and-replicable-estimation-of-bilateral-climate-finance/tree/main)
+For more details on the foundational work, please refer to the [related repository by Toetzke et al. (2022)](https://github.com/MalteToetzke/consistent-and-replicable-estimation-of-bilateral-climate-finance/tree/main)
 
 ---
 
