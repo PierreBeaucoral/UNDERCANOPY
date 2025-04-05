@@ -20,7 +20,7 @@ Each of these sources is described in detail below.
 
 ### 1. Raw Project Data
 - **File Path:**  
-  `/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/ML clustering aid activities/outputbig/Data.csv`
+  `/Raw Data/Data.csv`
 - **Description:**  
   This file is the output of a clustering analysis performed on aid activities. It contains:
   - **`raw_text`**: Unstructured textual descriptions of projects.
@@ -31,7 +31,7 @@ Each of these sources is described in detail below.
 
 ### 2. Training Data for Climate Finance Classification
 - **File Path:**  
-  `Data/Estimation of Climate Finance/train_set.csv`
+  `/Raw Data/train_set.csv`
 - **Description:**  
   This CSV file contains a preprocessed, balanced dataset used for training the transformer classifiers. It includes:
   - **`text`**: The processed project description.
@@ -50,7 +50,7 @@ Each of these sources is described in detail below.
 
 ### 4. Model Weights for Relevance Classification
 - **File Path:**  
-  `Data/Estimation of Climate Finance/saved_weights_relevance.pt`
+  `/Data/saved_weights_relevance.pt`
 - **Description:**  
   These model weights represent the state of the relevance classifier after fine-tuning. The classifier distinguishes between projects that are relevant to climate finance and those that are not.
 - **Role in Pipeline:**  
@@ -58,7 +58,7 @@ Each of these sources is described in detail below.
 
 ### 5. Model Weights for Multiclass Classification
 - **File Path:**  
-  `Data/Estimation of Climate Finance/saved_weights_multiclass.pt`
+  `/Data/saved_weights_multiclass.pt`
 - **Description:**  
   This file contains the weights for the multiclass classifier trained to assign detailed climate finance categories to relevant projects.
 - **Role in Pipeline:**  
