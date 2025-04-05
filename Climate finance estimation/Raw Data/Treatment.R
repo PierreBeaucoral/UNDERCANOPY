@@ -1,7 +1,7 @@
 rm(list = ls())
 
 # Define the desired working directory path
-wd <- "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Travaux CRS"
+wd <- ".../Raw Data"
 
 # Get the current working directory
 current_wd <- getwd()
