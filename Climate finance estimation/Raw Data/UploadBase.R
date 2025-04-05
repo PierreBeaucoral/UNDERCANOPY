@@ -7,7 +7,7 @@ library(dplyr)       # for data manipulation
 library(ggplot2)     # in case of future plotting needs
 
 # Set the path for the data directory
-working_dir <- "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Travaux CRS"
+working_dir <- ".../Raw Data"
 
 # Check if the current working directory is different from the desired one
 if (getwd() != working_dir) {
@@ -27,7 +27,7 @@ annual_years <- 2006:2023
 # Load annual datasets
 for (year in annual_years) {
   file_name <- paste0("CRS ", year, " Data")
-  file_path <- paste0("./Data/CRS/CRS ", year, " Data.txt")
+  file_path <- paste0("./CRS ", year, " Data.txt")
   assign(file_name, fread(file_path, encoding = "UTF-8"))
 }
 
