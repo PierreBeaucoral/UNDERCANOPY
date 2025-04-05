@@ -30,7 +30,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.ba
 logging.info(f"Using device: {device}")
 
 # Working directory
-wd = "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance/"
+wd = ".../Data/"
 os.chdir(wd)
 
 # Hyperparameters configuration
@@ -162,7 +162,7 @@ def train(model, train_dataloader, val_dataloader, optimizer, cross_entropy, sca
             logging.info('Validation loss decreased. Saving model...')
             best_valid_loss = valid_loss
             epochs_without_improvement = 0
-            torch.save(model.state_dict(), os.path.join(wd, 'Data/Estimation of Climate Finance/saved_weights_relevance.pt'))
+            torch.save(model.state_dict(), os.path.join(wd, 'saved_weights_relevance.pt'))
         else:
             epochs_without_improvement += 1
             if epochs_without_improvement >= patience:
@@ -204,7 +204,7 @@ def evaluate(model, val_dataloader, cross_entropy):
 def main():
     try:
         # Load dataset
-        df = load_dataset(os.path.join(wd, "Data/Estimation of Climate Finance/train_set.csv"))
+        df = load_dataset(os.path.join(wd, "train_set.csv"))
 
         # Load model and tokenizer
         tokenizer, auto_model = load_model_and_tokenizer(config["base_model"], config["class_number"])
@@ -238,7 +238,7 @@ def main():
         train(model, train_dataloader, val_dataloader, optimizer, cross_entropy, scaler, config["num_epochs"])
 
         # Evaluate the model on the test set
-        model.load_state_dict(torch.load(os.path.join(wd, 'Data/Estimation of Climate Finance/saved_weights_relevance.pt')))
+        model.load_state_dict(torch.load(os.path.join(wd, 'saved_weights_relevance.pt')))
         test_dataloader = DataLoader(test_data, sampler=SequentialSampler(test_data), batch_size=config["batch_size"], collate_fn=collate_batch)
 
         # Get predictions and labels for the test set
