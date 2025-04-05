@@ -7,7 +7,7 @@ library(dplyr)       # for data manipulation
 library(ggplot2)     # in case of future plotting needs
 
 # Set the path for the data directory
-working_dir <- ".../Raw Data"
+working_dir <- ".../Climate finance estimation/Raw Data"
 
 # Check if the current working directory is different from the desired one
 if (getwd() != working_dir) {
