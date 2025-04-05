@@ -85,7 +85,7 @@ This script performs the following key tasks:
    - Open R or RStudio and install the required packages (e.g., `data.table`, `dplyr`, `ggplot2`) if they are not already installed.
    - Set the working directory to:
      ```r
-     "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Travaux CRS"
+     ".../Raw Data"
      ```
 
 4. **Execute the Script:**  
