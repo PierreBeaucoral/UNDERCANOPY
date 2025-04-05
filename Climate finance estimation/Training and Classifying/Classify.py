@@ -141,7 +141,7 @@ logging.info("Starting main execution")
 device = initialize_device()
 
 # Set working directory
-wd = "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance/"
+wd = ".../Data/"
 
 # Load label dictionary
 label_dict_path = os.path.join(wd, 'reverse_dictionary_classes.json')
@@ -155,18 +155,18 @@ relevance_classifier, tokenizer = load_model_and_tokenizer(
     base_model,
     device,
     num_labels=2,
-    weight_path=os.path.join(wd, 'Data/Estimation of Climate Finance/saved_weights_relevance.pt')
+    weight_path=os.path.join(wd, 'saved_weights_relevance.pt')
 )
 
 multiclass_classifier, _ = load_model_and_tokenizer(
     base_model,
     device,
     num_labels=len(label_dict),
-    weight_path=os.path.join(wd, 'Data/Estimation of Climate Finance/saved_weights_multiclass.pt')
+    weight_path=os.path.join(wd, 'saved_weights_multiclass.pt')
 )
 
 # Load the dataset
-aid_data_path = '/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/ML clustering aid activities/outputbig/Data.csv'
+aid_data_path = '.../Data/Data.csv'
 data_df = pd.read_csv(aid_data_path, encoding='utf8')
 
 # Group by raw_text and aggregate donorcode
@@ -206,7 +206,7 @@ logging.info("Merging processed data with Data.csv based on raw_text and DonorCo
 merged_df = pd.merge(data_df, aid_data, on=['raw_text', 'DonorCode'], how='left')
 
 # Save the final merged dataset
-final_csv_path = os.path.join(wd, 'data/Estimation of Climate Finance/ClassifiedCRS.csv')
+final_csv_path = os.path.join(wd, 'ClassifiedCRS.csv')
 merged_df.to_csv(final_csv_path, encoding='utf8', index=False)
 logging.info(f"Saved final merged climate finance data to {final_csv_path}")
 
