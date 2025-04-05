@@ -141,7 +141,7 @@ logging.info("Starting main execution")
 device = initialize_device()
 
 # Set working directory
-wd = ".../Data/"
+wd = ".../Climate finance estimation/Data/"
 
 # Load label dictionary
 label_dict_path = os.path.join(wd, 'reverse_dictionary_classes.json')
