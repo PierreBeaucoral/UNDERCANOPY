@@ -7,7 +7,7 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 # Set working directory
-wd = "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance"
+wd = ".../Climate finance estimation/"
 os.chdir(wd)
 
 # -------------------------
@@ -17,7 +17,7 @@ def csv_import(filepath, delimiter="|"):
     return pd.read_csv(filepath, encoding='utf8', delimiter=delimiter, dtype={'text': str, "USD_Disbursement": float})
 
 # Import datasets
-df_origin = pd.read_csv('/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Travaux CRS/Data/DataPB.csv', 
+df_origin = pd.read_csv(os.path.join(wd,'/Data/DataPB.csv')), 
                         encoding='utf8', delimiter='|')
 df = csv_import(os.path.join(wd, 'Data/climate_finance_total.csv'))
 
@@ -553,7 +553,7 @@ def create_ratio_comparison_timeline_by_donor(df_origin, df, output_folder):
 # Main Function: Generate Selected Graphs
 # -------------------------
 def main():
-    figures_folder = os.path.join(wd, "Figures")
+    figures_folder = os.path.join(wd, "Figures/Graphs")
     os.makedirs(figures_folder, exist_ok=True)
     
     # Create timelines
