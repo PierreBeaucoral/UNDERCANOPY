@@ -72,6 +72,6 @@ Data$raw_text <- gsub("_", "", Data$raw_text)
 # Create a subsample for beta-testing
 rand_df <- Data[sample(nrow(Data), size=10000), ]
 
-write.table(Data, "./Data/DataPB.csv", sep="|")
-write.table(rand_df, "./Data/DataPBsample.csv", sep="|")
+write.table(Data, "./DataPB.csv", sep="|")
+write.table(rand_df, "./DataPBsample.csv", sep="|")
 gc()
