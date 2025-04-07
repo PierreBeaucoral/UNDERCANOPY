@@ -210,19 +210,6 @@ summary(Stn)
 Slnd <- update(Stn, corr = TRUE)
 coef(summary(Slnd), "corr")
 
-# # Calculate the heteroscedasticity-robust covariance matrix
-# 
-# library(sandwich)
-# library(lmtest)
-# 
-# robust_vcov <- sandwich(Slnd)
-# 
-# # Recompute test statistics with robust standard errors
-# robust_tests <- coeftest(Slnd, vcov = robust_vcov)
-# 
-# # Print results
-# summary(robust_tests)
-
 # Extract the summaries of both models
 summary_Stn <- summary(Stn)
 summary_Slnd <- summary(Slnd)
@@ -267,7 +254,7 @@ combined_df <- combined_df %>%
   select(Variable, everything())
 
 # Export the combined results to a CSV file
-write.csv(combined_df, "./regressions/adaptation/combined_regression_results.csv", row.names = FALSE)
+write.csv(combined_df, "./Results/adaptation/combined_regression_results.csv", row.names = FALSE)
 
 result1<-texreg(list(Stn, Slnd),
                 custom.model.names = c("log-normal", "Correlated log-normal"),
@@ -275,7 +262,7 @@ result1<-texreg(list(Stn, Slnd),
                 label = "tab:sep", pos = "ht", digits =3)
 result1
 
-write.table(result1, "Baseline Result for Adaptation")
+write.table(result1, "./Results/Baseline Result for Adaptation")
 
 # Extract the summary of the models
 stn_summary <- summary(Stn)$coefficients
@@ -297,9 +284,6 @@ results_df <- data.frame(
   zValue = c(stn_summary[,3], slnd_summary[,3]),
   pValue = c(stn_summary[,4], slnd_summary[,4])
 )
-
-# Save the data frame to a CSV file
-write.csv(results_df, "model_results.csv", row.names = FALSE)
 
 ##### Adaptation regression with rio markers #####
 
@@ -497,7 +481,7 @@ combined_df2 <- combined_df2 %>%
   select(Variable, everything())
 
 # Export the combined results to a CSV file
-write.csv(combined_df2, "./regressions/adaptation/combined_regression_results2.csv", row.names = FALSE)
+write.csv(combined_df2, "./Results/adaptation/combined_regression_results2.csv", row.names = FALSE)
 
 
 result2<-texreg(list(Stn2, Slnd2),
@@ -506,7 +490,7 @@ result2<-texreg(list(Stn2, Slnd2),
                 label = "tab:sep", pos = "ht", digits =3)
 result2
 
-write.table(result2, "Rio Result for Adaptation")
+write.table(result2, "./Results/adaptation/Rio Result for Adaptation")
 
 
 ##### Adaptation regression with ClimateFinanceBERT #####
@@ -797,7 +781,7 @@ combined_df3 <- combined_df3 %>%
   select(Variable, everything())
 
 # Export the combined results to a CSV file
-write.csv(combined_df3, "./regressions/adaptation/combined_regression_results3.csv", row.names = FALSE)
+write.csv(combined_df3, "./Results/adaptation/combined_regression_results3.csv", row.names = FALSE)
 
 result3<-texreg(list(Stn3, Slnd3),
                 custom.model.names = c("log-normal", "Correlated log-normal"),
@@ -808,118 +792,13 @@ result3
 write.table(result3, "ClimateFinanceBERT Result for Adaptation")
 
 # Save reg1 as a CSV file
-write.csv(reg1, "./Redaction/reg1.csv", row.names = FALSE)
+write.csv(reg1, "./Results/reg1.csv", row.names = FALSE)
 
 # Save reg2 as a CSV file
-write.csv(reg2, "./Redaction/reg2.csv", row.names = FALSE)
+write.csv(reg2, "./Results/reg2.csv", row.names = FALSE)
 
 # Save reg3 as a CSV file
-write.csv(reg3, "./Redaction/reg3.csv", row.names = FALSE)
-
-compare_datasets <- function(regdata, regRio_data, regBERT_data) {
-  # Helper function to safely get unique provider values
-  safe_unique_provider <- function(x) {
-    if (is.null(x)) return(character(0))
-    if (is.data.frame(x)) {
-      if ("ProviderISO" %in% names(x)) return(unique(x$ProviderISO))
-    }
-    return(character(0))
-  }
-  
-  # Helper function to safely get unique recipient values
-  safe_unique_recipient <- function(x) {
-    if (is.null(x)) return(character(0))
-    if (is.data.frame(x)) {
-      if ("RecipientISO" %in% names(x)) return(unique(x$RecipientISO))
-    }
-    return(character(0))
-  }
-  
-  # Safely compute intersections and differences for providers
-  provider_in_data_and_rio_not_bert <- intersect(
-    safe_unique_provider(regdata),
-    safe_unique_provider(regRio_data)
-  ) %>%
-    setdiff(safe_unique_provider(regBERT_data))
-  
-  # Safely compute intersections and differences for recipients
-  recipient_in_data_and_rio_not_bert <- intersect(
-    safe_unique_recipient(regdata),
-    safe_unique_recipient(regRio_data)
-  ) %>%
-    setdiff(safe_unique_recipient(regBERT_data))
-  
-  # Create summary data
-  summary_data <- tibble(
-    Attribute = c(
-      "Number of Observations",
-      "Number of Sectors",
-      "Number of Provider Countries",
-      "Number of Recipient Countries",
-      "Provider Countries in Data & Rio but not in BERT",
-      "Recipient Countries in Data & Rio but not in BERT"
-    ),
-    
-    regdata_adaptationAdapt = c(
-      if (is.data.frame(regdata)) nrow(regdata) else 0,
-      if (is.data.frame(regdata) && "Sector" %in% names(regdata)) 
-        length(unique(regdata$Sector)) else 0,
-      length(safe_unique_provider(regdata)),
-      length(safe_unique_recipient(regdata)),
-      "-",  # Moved to BERT column
-      "-"   # Moved to BERT column
-    ),
-    
-    regRio_data_adaptationAdapt = c(
-      if (is.data.frame(regRio_data)) nrow(regRio_data) else 0,
-      1,  # No sector information for regRio_data
-      length(safe_unique_provider(regRio_data)),
-      length(safe_unique_recipient(regRio_data)),
-      "-",  # Moved to BERT column
-      "-"   # Moved to BERT column
-    ),
-    
-    regBERT_data_adaptatioAdapt = c(
-      if (is.data.frame(regBERT_data)) nrow(regBERT_data) else 0,
-      if (is.data.frame(regBERT_data) && "climate_class" %in% names(regBERT_data))
-        length(unique(regBERT_data$climate_class)) else 0,
-      length(safe_unique_provider(regBERT_data)),
-      length(safe_unique_recipient(regBERT_data)),
-      ifelse(length(provider_in_data_and_rio_not_bert) > 0,
-             paste(provider_in_data_and_rio_not_bert, collapse = ", "),
-             "None"),
-      ifelse(length(recipient_in_data_and_rio_not_bert) > 0,
-             paste(recipient_in_data_and_rio_not_bert, collapse = ", "),
-             "None")
-    )
-  )
-  
-  return(summary_data)
-}
-
-summary_result_adap <- compare_datasets(
-  regdata_adaptationAdapt,
-  regRio_data_adaptationAdapt,
-  regBERT_data_adaptatioAdapt
-)
-
-# Select only the AdaptAmount column and add a Source identifier
-df_reg1 <- reg1 %>% select(AdaptAmount) %>% mutate(Source = "Reg1")
-df_reg2 <- reg2 %>% select(AdaptAmount) %>% mutate(Source = "Reg2")
-df_reg3 <- reg3 %>% select(AdaptAmount) %>% mutate(Source = "Reg3")
-
-# Combine the data frames
-combined_df <- bind_rows(df_reg1, df_reg2, df_reg3)
-
-# Plot the distribution
-ggplot(combined_df, aes(x = AdaptAmount, fill = Source)) +
-  geom_density(alpha = 0.5) +  # Density plot with transparency
-  labs(title = "Distribution of AdaptAmount",
-       x = "AdaptAmount",
-       y = "Density") +
-  theme_minimal() +
-  scale_fill_manual(values = c("Reg1" = "#1f77b4", "Reg2" = "#ff7f0e", "Reg3" = "#2ca02c")) +
-  theme(legend.title = element_blank())
+write.csv(reg3, "./Results/reg3.csv", row.names = FALSE)
 
 ####### Mitigation #######
 
@@ -1106,7 +985,7 @@ result2<-texreg(list(Stn1, Slnd1),
                 label = "tab:sep", pos = "ht", digits =3)
 result2
 
-write.table(result2, "Baseline Result for  Mitigation 103950 obs")
+write.table(result2, "./Results/mitigation/Baseline Result for  Mitigation 103950 obs")
 
 # Extract the summaries of both models
 summary_Stn <- summary(Stn1)
@@ -1152,7 +1031,7 @@ combined_df <- combined_df %>%
   select(Variable, everything())
 
 # Export the combined results to a CSV file
-write.csv(combined_df, "./regressions/combined_regression_results.csv", row.names = FALSE)
+write.csv(combined_df, "./Results/mitigation/combined_regression_results.csv", row.names = FALSE)
 
 ##### Adaptation regression with rio markers #####
 
@@ -1361,7 +1240,7 @@ combined_df2 <- combined_df2 %>%
   select(Variable, everything())
 
 # Export the combined results to a CSV file
-write.csv(combined_df2, "./regressions/combined_regression_results2_mitigation.csv", row.names = FALSE)
+write.csv(combined_df2, "./Results/mitigation/combined_regression_results2_mitigation.csv", row.names = FALSE)
 
 
 result2<-texreg(list(Stn2, Slnd2),
@@ -1370,7 +1249,7 @@ result2<-texreg(list(Stn2, Slnd2),
                 label = "tab:sep", pos = "ht", digits =3)
 result2
 
-write.table(result2, "Rio Result for Mitigation")
+write.table(result2, "./Results/mitigation/Rio Result for Mitigation")
 
 
 ##### Mitigation regression with ClimateFinanceBERT #####
@@ -1688,10 +1567,10 @@ summary_result_miti <- compare_datasets(
 
 summary_sample <- left_join(summary_result_adap, summary_result_miti, by="Attribute")
 
-write_csv(summary_sample, "./Redaction/summary_sample.csv")
+write_csv(summary_sample, "./Results/summary_sample.csv")
 
 # Export the combined results to a CSV file
-write.csv(combined_df3, "./regressions/combined_regression_results3_mitigation.csv", row.names = FALSE)
+write.csv(combined_df3, "./Results/mitigation/combined_regression_results3_mitigation.csv", row.names = FALSE)
 
 result3<-texreg(list(Stn3, Slnd3),
                 custom.model.names = c("log-normal", "Correlated log-normal"),
@@ -1699,7 +1578,7 @@ result3<-texreg(list(Stn3, Slnd3),
                 label = "tab:sep", pos = "ht", digits =3)
 result3 
 
-write.table(result3, "ClimateFinanceBERT Result for Mitigation")
+write.table(result3, "./Results/mitigation/ClimateFinanceBERT Result for Mitigation")
 
 # Save reg1 as a CSV file
 write.csv(reg4, "./Results/reg1_mitigation.csv", row.names = FALSE)
