@@ -1,0 +1,7 @@
+Attribute,regdata_adaptationAdapt.x,regRio_data_adaptationAdapt.x,regBERT_data_adaptatioAdapt.x,regdata_adaptationAdapt.y,regRio_data_adaptationAdapt.y,regBERT_data_adaptatioAdapt.y
+Number of Observations,103950,62543,14824,103950,62543,82684
+Number of Sectors,7,1,2,7,1,7
+Number of Provider Countries,30,30,26,30,30,29
+Number of Recipient Countries,68,68,64,68,68,67
+Provider Countries in Data & Rio but not in BERT,-,-,"GRC, LVA, POL, SVN",-,-,LVA
+Recipient Countries in Data & Rio but not in BERT,-,-,"AFG, ARM, BIH, ERI",-,-,AFG
