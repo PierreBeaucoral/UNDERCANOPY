@@ -24,13 +24,13 @@ library(skimr)
 ##################################################################################
 
 ###### Preparing Data for Climate adaptation ######
-setwd("/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance")
+setwd("...")
 
 rm(list=ls())
 
 ##### Rio Data ##### 
 
-Rio_Data <- fread('/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Travaux CRS/Data/DataPB.csv')
+Rio_Data <- fread('.../Climate Finance Estimation/Raw Data/DataPB.csv')
 
 Rio_data_adaptation <- Rio_Data%>%
   filter(ClimateAdaptation %in% (1:2))%>%
@@ -44,7 +44,7 @@ Rio_data_adaptation[Rio_data_adaptation$RecipientName %in% "Kosovo", "Country_Co
 
 #### CLimateFinanceBERT Data ####
 
-ClimateBERT <- fread("Data/climate_finance_total.csv")
+ClimateBERT <- fread(".../Climate Finance Estimation/Data/climate_finance_total.csv")
 
 ClimateBERT_Adaptation <- ClimateBERT%>%
   filter(meta_category == "Adaptation")%>%
@@ -57,7 +57,7 @@ ClimateBERT_Adaptation[ClimateBERT_Adaptation$RecipientName %in% "Kosovo", "Coun
 
 
 #### Huei ####
-data_adaptation<-read.csv("Data/Adaptation with gravity vars amended FULL Feb 14 2023.csv")
+data_adaptation<-read.csv(".../Climate Finance Estimation/Raw Data/Adaptation with gravity vars amended FULL Feb 14 2023.csv")
 
 data_adaptation$NDC15[data_adaptation$NDC15%in%1 & !data_adaptation$Year%in%2015]<-0
 data_adaptation$NDC15[data_adaptation$NDC16%in%1 & !data_adaptation$Year%in%2016]<-0
@@ -940,7 +940,7 @@ Rio_data_Mitigation[Rio_data_Mitigation$RecipientName %in% "Kosovo", "Country_Co
 
 #### CLimateFinanceBERT Data ####
 
-ClimateBERT <- fread("Data/climate_finance_total.csv")
+ClimateBERT <- fread(".../Climate Finance Estimation/Data/climate_finance_total.csv")
 
 ClimateBERT_Mitigation <- ClimateBERT%>%
   filter(meta_category == "Mitigation")%>%
@@ -956,7 +956,7 @@ ClimateBERT_Mitigation[ClimateBERT_Mitigation$RecipientName %in% "TÃ¼rkiye", "
 
 #### Huei Data ####
 
-data_mitigation<-read.csv("Data/Mitigation with gravity vars amended FULL Feb 14 2023.csv")
+data_mitigation<-read.csv(".../Climate Finance Estimation/Raw Data/Mitigation with gravity vars amended FULL Feb 14 2023.csv")
 
 
 
@@ -1702,13 +1702,13 @@ result3
 write.table(result3, "ClimateFinanceBERT Result for Mitigation")
 
 # Save reg1 as a CSV file
-write.csv(reg4, "./Redaction/reg1_mitigation.csv", row.names = FALSE)
+write.csv(reg4, "./Results/reg1_mitigation.csv", row.names = FALSE)
 
 # Save reg2 as a CSV file
-write.csv(reg5, "./Redaction/reg2_mitigation.csv", row.names = FALSE)
+write.csv(reg5, "./Results/reg2_mitigation.csv", row.names = FALSE)
 
 # Save reg3 as a CSV file
-write.csv(reg6, "./Redaction/reg3_mitigation.csv", row.names = FALSE)
+write.csv(reg6, "./Results/reg3_mitigation.csv", row.names = FALSE)
 
 # Select only the MitiAmount column and add a Source identifier
 df_reg4 <- reg4 %>% select(MitiAmount) %>% mutate(Source = "Reg4")
