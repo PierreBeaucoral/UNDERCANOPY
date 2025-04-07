@@ -92,10 +92,8 @@ This section of the project focuses on the econometric analysis of the determina
 ### Data Preparation (R Scripts)
 1. **Download Raw Data:**  
    Obtain the raw OECD CRS text files from the OECD website and place them in the appropriate folders (e.g., `./Data/CRS/`).
-2. **Run UploadBase.R:**  
-   This script will load, clean, and merge the raw data to produce `DataPB.csv` and `DataPBsample.csv`.
-3. **Run Meta-Categorization Script:**  
-   Process the output from UploadBase.R to assign meta-categories and produce `ClassifiedCRS.csv` and `climate_finance_total.csv`.
+2. **Run Treatment.R:**  
+   This script will load (by calling `UploadBase.R`), clean, and merge the raw data to produce `DataPB.csv` and `DataPBsample.csv`.
 
 ### Model Training and Estimation (Python Scripts)
 1. **Install Dependencies:**  
