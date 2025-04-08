@@ -3,7 +3,7 @@ import os
 import sys 
 
 # Set the working directory
-wd = ".../Climate finance estimation/Data/"
+wd = "./UNDERCANOPY/Climate finance estimation/Data/"
 os.chdir(wd)
 
 def csv_import(name, delimiter=","):
