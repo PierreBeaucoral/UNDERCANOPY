@@ -1,7 +1,7 @@
 rm(list = ls())
 
 # Define the desired working directory path
-wd <- ".../Climate finance estimation/Raw Data"
+wd <- "./UNDERCANOPY/Climate finance estimation/Raw Data"
 
 # Get the current working directory
 current_wd <- getwd()
