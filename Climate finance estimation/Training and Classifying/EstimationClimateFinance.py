@@ -10,12 +10,12 @@ import pandas as pd
 import os
 
 # Step 1: Set up the working directory
-wd = "../Climate finance estimation/"
+wd = "./UNDERCANOPY/Climate finance estimation/"
 os.chdir(wd)
 
 # Step 2: Load the first CSV file with low_memory=False to prevent DtypeWarnings
 try:
-    df1 = pd.read_csv('.../Climate finance estimation/Raw Data/projects_clusters.csv')
+    df1 = pd.read_csv(os.path.join(wd,'Raw Data/projects_clusters.csv'))
 except FileNotFoundError:
     print("File not found. Please check the file path.")
     raise
@@ -24,7 +24,7 @@ except FileNotFoundError:
 climate_adaptation = df1[df1['Topic'] == 5].copy().reset_index(drop=True)
 
 # Optionally, save the climate_adaptation DataFrame to a CSV file for future reference
-climate_adaptation_output_path = './Climate finance estimation/Data/climate_adaptation_projects.csv'
+climate_adaptation_output_path = os.path.join(wd,'Data/climate_adaptation_projects.csv')
 climate_adaptation.to_csv(climate_adaptation_output_path, index=False)
 
 print(f"Climate Adaptation DataFrame saved to {climate_adaptation_output_path}")
@@ -56,7 +56,7 @@ else:
 
 filtered_df1['relevance'] = 1
 
-climate_projects_output_path = './Data/climate_projects.csv'
+climate_projects_output_path = os.path.join(wd,'Data/climate_projects.csv')
 filtered_df1.to_csv(climate_projects_output_path, index=False)
 
 # Step 5: Remove duplicates based on the 'raw_text' column
