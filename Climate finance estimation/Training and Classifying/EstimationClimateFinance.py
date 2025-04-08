@@ -15,7 +15,7 @@ os.chdir(wd)
 
 # Step 2: Load the first CSV file with low_memory=False to prevent DtypeWarnings
 try:
-    df1 = pd.read_csv(os.path.join(wd,'Raw Data/projects_clusters.csv'))
+    df1 = pd.read_csv(os.path.join(wd,'Data/projects_clusters.csv'))
 except FileNotFoundError:
     print("File not found. Please check the file path.")
     raise
