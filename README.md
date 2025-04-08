@@ -105,3 +105,4 @@ This section of the project focuses on the econometric analysis of the determina
 
 You will find the related data and script in the `Econometrics` Folder.
 
+[Click here to view the interactive organization of repository](https://PierreBeaucoral.github.io/UNDERCANOPY/output.html)
