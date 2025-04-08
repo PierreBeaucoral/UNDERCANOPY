@@ -1,3 +1,21 @@
+# List of required packages
+packages <- c(
+  "readr", "png", "purrr", "gtable", "gridExtra", "ggplot2", "dplyr",
+  "knitr", "kableExtra", "pander", "tidyverse", "tmap", "leaflet", 
+  "ggforce", "treemap", "readxl", "ggalluvial", "migest", "rlist", 
+  "data.table", "hms", "flextable", "skimr"
+)
+
+# Function to install missing packages
+install_if_missing <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+}
+
+# Apply to all packages
+invisible(lapply(packages, install_if_missing))
+
 library(readr)
 library(png)
 library(purrr)
@@ -24,13 +42,13 @@ library(skimr)
 ##################################################################################
 
 ###### Preparing Data for Climate adaptation ######
-setwd("...")
+setwd("./UNDERCANOPY/Econometrics/")
 
 rm(list=ls())
 
 ##### Rio Data ##### 
 
-Rio_Data <- fread('.../Climate Finance Estimation/Raw Data/DataPB.csv')
+Rio_Data <- fread('./UNDERCANOPY/Climate Finance Estimation/Data/DataPB.csv')
 
 Rio_data_adaptation <- Rio_Data%>%
   filter(ClimateAdaptation %in% (1:2))%>%
@@ -44,7 +62,7 @@ Rio_data_adaptation[Rio_data_adaptation$RecipientName %in% "Kosovo", "Country_Co
 
 #### CLimateFinanceBERT Data ####
 
-ClimateBERT <- fread(".../Climate Finance Estimation/Data/climate_finance_total.csv")
+ClimateBERT <- fread("./UNDERCANOPY/Climate Finance Estimation/Data/climate_finance_total.csv")
 
 ClimateBERT_Adaptation <- ClimateBERT%>%
   filter(meta_category == "Adaptation")%>%
@@ -57,7 +75,7 @@ ClimateBERT_Adaptation[ClimateBERT_Adaptation$RecipientName %in% "Kosovo", "Coun
 
 
 #### Huei ####
-data_adaptation<-read.csv(".../Climate Finance Estimation/Raw Data/Adaptation with gravity vars amended FULL Feb 14 2023.csv")
+data_adaptation<-read.csv("./UNDERCANOPY/Climate Finance Estimation/Raw Data/Adaptation with gravity vars amended FULL Feb 14 2023.csv")
 
 data_adaptation$NDC15[data_adaptation$NDC15%in%1 & !data_adaptation$Year%in%2015]<-0
 data_adaptation$NDC15[data_adaptation$NDC16%in%1 & !data_adaptation$Year%in%2016]<-0
