@@ -30,7 +30,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.ba
 logging.info(f"Using device: {device}")
 
 # Working directory
-wd = ".../Climate finance estimation/Data/"
+wd = "./UNDERCANOPY/Climate finance estimation/Data/"
 os.chdir(wd)
 
 # Hyperparameters configuration
