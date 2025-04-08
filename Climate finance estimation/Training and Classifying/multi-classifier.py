@@ -38,7 +38,7 @@ else:
 logging.info(f"Using device: {device}")
 
 # Working directory
-wd = ".../Climate finance estimation/Data/"
+wd = "./UNDERCANOPY/Climate finance estimation/Data/"
 os.chdir(wd)
 
 # Hyperparameters
