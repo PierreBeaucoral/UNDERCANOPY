@@ -105,4 +105,104 @@ This section of the project focuses on the econometric analysis of the determina
 
 You will find the related data and script in the `Econometrics` Folder.
 
-[Click here to view the interactive organization of repository](https://PierreBeaucoral.github.io/UNDERCANOPY/output.html)
+---
+
+# Repository organization
+
+When downloaded you repository should have the same organization: 
+
+---
+```text
+├── Climate finance estimation
+│   ├── Data
+│   │   ├── Data.csv
+│   │   ├── DataPB.csv
+│   │   ├── dictionary_classes.json
+│   │   ├── projects_clusters.csv
+│   │   ├── readme.md
+│   │   ├── reverse_dictionary_classes.json
+│   │   └── train_set.csv
+│   ├── Figures
+│   │   ├── graph_final.py
+│   │   ├── Graphs
+│   │   │   ├── climate_finance_forecast_sarima.png
+│   │   │   ├── combined_adaptation_mitigation_plot.png
+│   │   │   ├── combined_climate_finance_analysis.png
+│   │   │   ├── combined_comparison_by_donor.png
+│   │   │   ├── ratio_comparison_by_donor.png
+│   │   │   ├── readme.md
+│   │   │   ├── stacked_area_adaptation_commitment.png
+│   │   │   ├── stacked_area_adaptation_disbursement.png
+│   │   │   ├── stacked_area_mitigation_commitment.png
+│   │   │   ├── stacked_area_mitigation_disbursement.png
+│   │   │   ├── stackplot_commitment.png
+│   │   │   └── stackplot_disbursement.png
+│   │   └── readme.md
+│   ├── Raw Data
+│   │   ├── Adaptation with gravity vars amended FULL Feb 14 2023.csv
+│   │   ├── CRS
+│   │   │   ├── CRS 1973-94 data.txt
+│   │   │   ├── CRS 1995-99 data.txt
+│   │   │   ├── CRS 2000-01 data.txt
+│   │   │   ├── CRS 2002-03 data.txt
+│   │   │   ├── CRS 2004-05 data.txt
+│   │   │   ├── CRS 2006 data.txt
+│   │   │   ├── CRS 2007 data.txt
+│   │   │   ├── CRS 2008 data.txt
+│   │   │   ├── CRS 2009 data.txt
+│   │   │   ├── CRS 2010 data.txt
+│   │   │   ├── CRS 2011 data.txt
+│   │   │   ├── CRS 2012 data.txt
+│   │   │   ├── CRS 2013 data.txt
+│   │   │   ├── CRS 2014 data.txt
+│   │   │   ├── CRS 2015 data.txt
+│   │   │   ├── CRS 2016 data.txt
+│   │   │   ├── CRS 2017 data.txt
+│   │   │   ├── CRS 2018 data.txt
+│   │   │   ├── CRS 2019 data.txt
+│   │   │   ├── CRS 2020 data.txt
+│   │   │   ├── CRS 2021 data.txt
+│   │   │   ├── CRS 2022 data.txt
+│   │   │   └── CRS 2023 data.txt
+│   │   ├── Mitigation with gravity vars amended FULL Feb 14 2023.csv
+│   │   ├── readme.md
+│   │   ├── Treatment.R
+│   │   └── UploadBase.R
+│   ├── readme.md
+│   ├── requirements.txt
+│   └── Training and Classifying
+│       ├── Classify.py
+│       ├── EstimationClimateFinance.py
+│       ├── meta.py
+│       ├── multi-classifier.py
+│       ├── readme.md
+│       └── Relevance_classifier.py
+├── Econometrics
+│   ├── Data
+│   │   ├── Readme.md
+│   │   ├── reg1_mitigation.csv
+│   │   ├── reg1.csv
+│   │   ├── reg2_mitigation.csv
+│   │   ├── reg2.csv
+│   │   ├── reg3_mitigation.csv
+│   │   └── reg3.csv
+│   ├── Estimations.R
+│   ├── readme.md
+│   └── Results
+│       ├── adaptation
+│       │   ├── combined_regression_results.csv
+│       │   ├── combined_regression_results2.csv
+│       │   └── combined_regression_results3.csv
+│       ├── Baseline Result for  Mitigation 103950 obs
+│       ├── Baseline Result for Adaptation
+│       ├── ClimateFinanceBERT Result for Adaptation
+│       ├── ClimateFinanceBERT Result for Mitigation
+│       ├── mitigation
+│       │   ├── combined_regression_results.csv
+│       │   ├── combined_regression_results2_mitigation.csv
+│       │   └── combined_regression_results3_mitigation.csv
+│       ├── Rio Result for Adaptation
+│       ├── Rio Result for Mitigation
+│       └── summary_sample.csv
+├── LICENSE
+├── README.md
