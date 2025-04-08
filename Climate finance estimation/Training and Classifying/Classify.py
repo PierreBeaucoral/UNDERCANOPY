@@ -141,7 +141,7 @@ logging.info("Starting main execution")
 device = initialize_device()
 
 # Set working directory
-wd = ".../Climate finance estimation/Data/"
+wd = ".../UNDERCANOPY/Climate finance estimation/Data/"
 
 # Load label dictionary
 label_dict_path = os.path.join(wd, 'reverse_dictionary_classes.json')
@@ -166,7 +166,7 @@ multiclass_classifier, _ = load_model_and_tokenizer(
 )
 
 # Load the dataset
-aid_data_path = '.../Data/Data.csv'
+aid_data_path = os.path.join(wd,'Data.csv')
 data_df = pd.read_csv(aid_data_path, encoding='utf8')
 
 # Group by raw_text and aggregate donorcode
