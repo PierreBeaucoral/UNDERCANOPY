@@ -7,7 +7,7 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 # Set working directory
-wd = ".../Climate finance estimation/"
+wd = "...UNDERCANOPY/Climate finance estimation/"
 os.chdir(wd)
 
 # -------------------------
@@ -553,7 +553,7 @@ def create_ratio_comparison_timeline_by_donor(df_origin, df, output_folder):
 # Main Function: Generate Selected Graphs
 # -------------------------
 def main():
-    figures_folder = os.path.join(wd, "Figures/Graphs")
+    figures_folder = os.path.join(wd, "Figures/Graphs/")
     os.makedirs(figures_folder, exist_ok=True)
     
     # Create timelines
