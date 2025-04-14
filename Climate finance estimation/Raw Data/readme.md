@@ -76,28 +76,23 @@ This script performs the following key tasks:
 ## Replication Instructions
 
 1. **Download Required Data Files:**  
-   - Before running this script, download the original CRS data files from the [OECD website](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false) as instructed in the documentation for `UploadBase.R`. Ensure these files are placed in the expected directory structure.
+   - Before running this script, download the original CRS data files from the [OECD website](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false). Ensure these files are **unziped** and placed in the expected directory structure.
   
-   Make sure you have the following packages installed in your R environment: *data.table, dplyr, ggplot2*  
+   Make sure you have the following packages installed in your R environment: *data.table, dplyr, ggplot2*.
 
-3. **Run the Treatment.R Script:**  
+   Set the working directory in both R files to '../Raw data'.
+
+2. **Run the Treatment.R Script:**  
    - First, run `Treatment.R` to load and combine the raw data files. This script initializes the list `BDD` and other necessary objects.
 
-4. **Set Up Your R Environment:**  
-   - Open R or RStudio and install the required packages (e.g., `data.table`, `dplyr`, `ggplot2`) if they are not already installed.
-   - Set the working directory to:
-     ```r
-     ".../Raw Data"
-     ```
-
-5. **Execute the Script:**  
+3. **Execute the Script:**  
    - Run this script (source it) by:
      ```r
      source("YourScriptName.R")
      ```
    - The script will process the data, create the unified `raw_text` variable, remove unwanted rows, and save the processed datasets as CSV files.
 
-6. **Verify the Output:**  
+4. **Verify the Output:**  
    - Check the console for messages indicating the working directory status and memory clean-up.
    - Verify that `DataPB.csv` and `DataPBsample.csv` are created in the `Data` folder.
 
