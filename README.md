@@ -91,7 +91,7 @@ This section of the project focuses on the econometric analysis of the determina
 
 ### Data Preparation (R Scripts)
 1. **Download Raw Data:**  
-   Obtain the raw OECD CRS [text files from the OECD website](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false) and place them in the appropriate folders (e.g., `./Data/CRS/`).
+   Obtain the raw OECD CRS [text files from the OECD website](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false) and place them in the appropriate folders (e.g., `./Data/CRS/`, see the [Repository organization](#repository-organization)).
 2. **Run Treatment.R:**  
    This script will load (by calling `UploadBase.R`), clean, and merge the raw data to produce `DataPB.csv` and `DataPBsample.csv`.
 
