@@ -24,12 +24,40 @@ period_label <- paste0(min(years), "-", max(years))
 # Years with annual data
 annual_years <- 2006:2023
 
+
+
+# MODIFICATIONS LF:
+# problème de portabilité entre macosx et w11 ?
 # Load annual datasets
 for (year in annual_years) {
-  file_name <- paste0("CRS ", year, " Data")
-  file_path <- paste0("./CRS ", year, " Data.txt")
-  assign(file_name, fread(file_path, encoding = "UTF-8"))
+  file_name <- paste0("CRS ", year, " Data") # instruction ok
+  # ici je suis obligé d'ajouter à l'instruction le nom du dossier "CRS" car dans le code initial le dossier n'est pas spécifié:
+  file_path <- file.path(".", paste0("CRS/CRS ", year, " Data.txt"))
+  # CODE INITIAL : file_path <- paste0("./CRS ", year, " Data.txt")
+  
+  # Vérifier si le fichier existe
+  if (file.exists(file_path)) {
+    assign(file_name, fread(file_path, encoding = "UTF-8"))
+  } else {
+    print(paste("Fichier non trouvé :", file_path))
+  }
 }
+
+
+for (year in annual_years) {
+  file_name <- paste0("CRS ", year, " Data")
+  file_path <- file.path(".", paste0("./CRS/CRS ", year, " Data.txt"))
+  
+  # Afficher le chemin pour vérification
+  print(file_path)
+  print(getwd())
+  # Vérifier si le fichier existe
+  if (file.exists(file_path)) {
+    assign(file_name, fread(file_path, encoding = "UTF-8"))
+  } else {
+    print(paste("Fichier non trouvé :", file_path))
+  }
+
 
 gc() # Free up memory
 
