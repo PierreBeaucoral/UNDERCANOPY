@@ -57,10 +57,10 @@ CRS <- lapply(annual_years, function(year) {
 
 # Load multi-year datasets
 CRS_1973_94_data <- fread("CRS/CRS 1973-94 data.txt", encoding = "Latin-1")
-CRS_1995_99_data <- fread("./Data/CRS/CRS 1995-99 data.txt", encoding = "Latin-1")
-CRS_2000_01_data <- fread("./Data/CRS/CRS 2000-01 data.txt", encoding = "Latin-1")
-CRS_2002_03_data <- fread("./Data/CRS/CRS 2002-03 data.txt", encoding = "Latin-1")
-CRS_2004_05_data <- fread("./Data/CRS/CRS 2004-05 data.txt", encoding = "Latin-1")
+CRS_1995_99_data <- fread("CRS/CRS 1995-99 data.txt", encoding = "Latin-1")
+CRS_2000_01_data <- fread("CRS/CRS 2000-01 data.txt", encoding = "Latin-1")
+CRS_2002_03_data <- fread("CRS/CRS 2002-03 data.txt", encoding = "Latin-1")
+CRS_2004_05_data <- fread("CRS/CRS 2004-05 data.txt", encoding = "Latin-1")
 
 # Combine all datasets into a list
 all_data <- c(list(CRS_1973_94_data, CRS_1995_99_data, CRS_2000_01_data, CRS_2002_03_data, CRS_2004_05_data), CRS)
