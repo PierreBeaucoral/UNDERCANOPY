@@ -62,7 +62,7 @@ Yearly <- c(2006: 2021)
 
 for (i in  Yearly) {
   filename<-paste0("CRS"," ",i," ", "Data")
-  wd<-paste0("./Data/CRS/CRS"," ",i," ", "Data", ".txt")
+  wd<-paste0("./CRS/CRS"," ",i," ", "Data", ".txt")
   assign(filename,fread(wd,  encoding =  "Latin-1"))
 }
 
@@ -78,11 +78,11 @@ CRS <- lapply(Yearly, function(x) {
 ##### For pluri-annual datasets #####
 
 
-"CRS 1973-94 data" <- fread("./Data/CRS/CRS 1973-94 data.txt",  encoding =  "Latin-1")
-"CRS 1995-99 data" <- fread("./Data/CRS/CRS 1995-99 data.txt",  encoding =  "Latin-1")
-"CRS 2000-01 data" <- fread("./Data/CRS/CRS 2000-01 data.txt",  encoding =  "Latin-1")
-"CRS 2002-03 data" <- fread("./Data/CRS/CRS 2002-03 data.txt",  encoding =  "Latin-1")
-"CRS 2004-05 data" <- fread("./Data/CRS/CRS 2004-05 data.txt",  encoding =  "Latin-1")
+"CRS 1973-94 data" <- fread("./CRS/CRS 1973-94 data.txt",  encoding =  "Latin-1")
+"CRS 1995-99 data" <- fread("./CRS/CRS 1995-99 data.txt",  encoding =  "Latin-1")
+"CRS 2000-01 data" <- fread("./CRS/CRS 2000-01 data.txt",  encoding =  "Latin-1")
+"CRS 2002-03 data" <- fread("./CRS/CRS 2002-03 data.txt",  encoding =  "Latin-1")
+"CRS 2004-05 data" <- fread("./CRS/CRS 2004-05 data.txt",  encoding =  "Latin-1")
 
 
 ####### Creation of a list with all datasets #######
