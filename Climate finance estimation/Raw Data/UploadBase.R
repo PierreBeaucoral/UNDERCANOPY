@@ -44,21 +44,6 @@ for (year in annual_years) {
 }
 
 
-for (year in annual_years) {
-  file_name <- paste0("CRS ", year, " Data")
-  file_path <- file.path(".", paste0("./CRS/CRS ", year, " Data.txt"))
-  
-  # Afficher le chemin pour vérification
-  print(file_path)
-  print(getwd())
-  # Vérifier si le fichier existe
-  if (file.exists(file_path)) {
-    assign(file_name, fread(file_path, encoding = "UTF-8"))
-  } else {
-    print(paste("Fichier non trouvé :", file_path))
-  }
-
-
 gc() # Free up memory
 
 # Create a list of annual datasets
@@ -66,8 +51,12 @@ CRS <- lapply(annual_years, function(year) {
   get(paste0("CRS ", year, " Data"))
 })
 
+# MODIFICATIONS LF:
+# ici les chemins spécifiés ne sont pas les bons ? à moins que ces fichiers ne soient pas à placer dans raw data ?
+# je modifie les chemins :
+
 # Load multi-year datasets
-CRS_1973_94_data <- fread("./Data/CRS/CRS 1973-94 data.txt", encoding = "Latin-1")
+CRS_1973_94_data <- fread("CRS/CRS 1973-94 data.txt", encoding = "Latin-1")
 CRS_1995_99_data <- fread("./Data/CRS/CRS 1995-99 data.txt", encoding = "Latin-1")
 CRS_2000_01_data <- fread("./Data/CRS/CRS 2000-01 data.txt", encoding = "Latin-1")
 CRS_2002_03_data <- fread("./Data/CRS/CRS 2002-03 data.txt", encoding = "Latin-1")
