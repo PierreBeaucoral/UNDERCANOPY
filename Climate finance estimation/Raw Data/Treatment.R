@@ -25,7 +25,7 @@ gc()
 #### 1- Get only data of interest #### 
 #Comment: Consider only data that get a sector code categorization 
 
-
+# ici je ne comprends pas d'où vient le BDD ?
 BDD <- lapply (BDD, function(x) drop_na(x, c("Year", "DonorCode", "RecipientCode")))
 rm(list=setdiff(ls(), c("BDD", "Bound", "Period")))
 gc()
