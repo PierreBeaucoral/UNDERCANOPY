@@ -17,7 +17,7 @@ def csv_import(filepath, delimiter="|"):
     return pd.read_csv(filepath, encoding='utf8', delimiter=delimiter, dtype={'text': str, "USD_Disbursement": float})
 
 # Import datasets
-df_origin = pd.read_csv(os.path.join(wd,'/Data/DataPB.csv')), 
+df_origin = pd.read_csv(os.path.join(wd,'/Data/DataPB.csv'), 
                         encoding='utf8', delimiter='|')
 df = csv_import(os.path.join(wd, 'Data/climate_finance_total.csv'))
 
