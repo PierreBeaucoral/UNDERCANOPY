@@ -10,7 +10,7 @@ import pandas as pd
 import os
 
 # Step 1: Set up the working directory
-wd = "./UNDERCANOPY/Climate finance estimation/"
+wd = "/UNDERCANOPY-main/Climate finance estimation/"
 os.chdir(wd)
 
 # Step 2: Load the first CSV file with low_memory=False to prevent DtypeWarnings
@@ -83,7 +83,7 @@ sampled_df1 = sampled_df1.rename(columns={'raw_text': 'text', 'CustomName': 'lab
 
 # Step 11: Load the second CSV file
 try:
-    df2 = pd.read_csv(os.path.join(wd, '/train_set.csv'))
+    df2 = pd.read_csv(os.path.join(wd, 'Data/train_set.csv'), delimiter=";")
 except FileNotFoundError:
     print("File not found. Please check the file path.")
     raise
@@ -110,7 +110,7 @@ indices_to_remove = [125, 132, 140, 163, 206, 239, 241, 277, 332, 337, 410, 577,
                      3784, 3791, 3792, 3793, 3806, 3820, 4070, 4083, 4129, 4132, 4134, 4153, 4294, 4296, 4328, 4345,
                      4356, 4363, 4364, 4725, 4762, 5067, 5146, 5154, 5233, 5234, 5290, 5415, 5453, 5455, 5636, 5671,
                      5674, 5762, 5772, 5780, 5927, 5976, 6205, 6286, 6296, 6308, 6393, 6439, 6440, 6470, 6477, 6482,
-                     6590, 6730, 6733, 6734, 6753 
+                     6590, 6630, 6633, 6634, 6653 
                      ]
 
 # List of indices to add from climate_adaptation
@@ -162,7 +162,7 @@ for label, indices in label_updates.items():
 
 
 # Select only the 'raw_text' and 'CustomName' columns from projects_to_add
-projects_to_add = climate_adaptation.iloc[indices_to_add][['raw_text', 'CustomName']].copy()
+projects_to_add = df1.iloc[indices_to_add][['raw_text', 'CustomName']].copy()
 
 # Rename 'raw_text' to 'text' and 'CustomName' to 'label'
 projects_to_add = projects_to_add.rename(columns={'raw_text': 'text', 'CustomName': 'label'})
