@@ -41,9 +41,10 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
    - **Auxiliary Files:**  
      JSON label dictionaries (e.g., `reverse_dictionary_classes.json`) and pre-trained model weights (`saved_weights_relevance.pt`, `saved_weights_multiclass.pt`).
 
-   > **Note:** Due to their size, key intermediate and final data files (including DataPB, Data, ClassifiedCRS, ClimateFinanceTotal, and the model weight files) are not stored directly in this repository. They are available at:  
+   > **Note:** Due to their size, key raw, intermediate and final data files (including DataPB, Data, ClassifiedCRS, ClimateFinanceTotal, and the model weight files) are not stored directly in this repository. They are available at:  
    > [This drive](https://drive.uca.fr/d/6058b184ba134a02a708/)
 
+    > **Please download all the files and add it in the required folder according to the directory map available here**
 ---
 
 
@@ -59,7 +60,15 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
 1. **Ensure Dependencies:**  
    - For Python scripts, install required packages:
      ```bash
-     pip install pandas numpy torch transformers scikit-learn tqdm
+     def install_requirements():
+         import subprocess, sys
+         try:
+             subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", '/UNDERCANOPY/Climate finance estimation/requirements.txt'])
+             print("Requirements installed successfully.")
+         except subprocess.CalledProcessError as e:
+             print("Failed to install requirements:", e)
+
+     install_requirements()
      ```
    - For R scripts, install required libraries (`data.table`, `dplyr`, `ggplot2`).
 2. **Download Pre-trained Weights and Label Files:**  
