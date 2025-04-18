@@ -62,7 +62,7 @@ training_args = {
 
 # Load dataset
 path = os.path.join(wd, "train_set.csv")
-df = pd.read_csv(path, delimiter=";")
+df = pd.read_csv(path)
 
 # Data preparation function
 def prepare_data(df, tokenizer, n_words, random_states, only_relevant_data):
