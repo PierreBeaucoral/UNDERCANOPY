@@ -603,7 +603,7 @@ def main():
                                           cluster_miti, rio_miti1_disbursement, rio_miti2_disbursement, figures_folder)
     
     # Combined climate finance analysis
-    analyze_combined_climate_finance(df_time_disbursement, df_time_commitment, os.path.join(figures_folder, "trend_analysis"))
+    analyze_combined_climate_finance(df_time_disbursement, df_time_commitment,figures_folder)
     
     # SARIMA forecast plot
     forecast_folder = os.path.join(figures_folder, "forecasts")
