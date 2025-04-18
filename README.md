@@ -95,11 +95,32 @@ This section of the project focuses on the econometric analysis of the determina
 2. **Run Treatment.R:**  
    This script will load (by calling `UploadBase.R`), clean, and merge the raw data to produce `DataPB.csv` and `DataPBsample.csv`.
 
-### Model Training and Estimation (Python Scripts)
-1. **Install Dependencies:**  
-   Ensure you have Python 3.7+ installed along with:
-   ```bash
-   pip install pandas numpy torch transformers scikit-learn tqdm
+### Model Training and Estimation
+1. **Ensure Dependencies:**  
+   - For Python scripts, install required packages:
+     ```bash
+     def install_requirements():
+         import subprocess, sys
+         try:
+             subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", '/UNDERCANOPY/Climate finance estimation/requirements.txt'])
+             print("Requirements installed successfully.")
+         except subprocess.CalledProcessError as e:
+             print("Failed to install requirements:", e)
+
+     install_requirements()
+     ```
+2. **Download Pre-trained Weights, project clusters and Label Files:**  
+   The model weights (`saved_weights_relevance.pt` and `saved_weights_multiclass.pt`) and JSON label mapping files (e.g., `reverse_dictionary_classes.json`) are available from the external drive:
+   [https://drive.uca.fr/d/6058b184ba134a02a708/](https://drive.uca.fr/d/6058b184ba134a02a708/)
+
+   > **Please download all the files and arrange them in required folder according to the directory map under**
+4. **Run Python Pipelines:**  
+   - Execute `EstimationClimateFinance.py` (if applicable) to perform financial estimation and forecasting.
+   - Execute `Relevance_classifier.py` or related scripts to fine-tune and evaluate the models.
+   - Execute `Multi-classifier.py` or related scripts to fine-tune and evaluate the models.
+   - Execute `Classify.py` to run the classification pipeline.
+   - Execute `Meta.py` to run the meta categories pipeline.
+   - Execute `Graph_Final.py` to run the classification pipeline.
 
 ### Econometric analysis (R) 
 
