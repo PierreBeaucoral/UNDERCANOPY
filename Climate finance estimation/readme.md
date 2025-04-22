@@ -72,7 +72,7 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
      ```
    - For R scripts, install required libraries (`data.table`, `dplyr`, `ggplot2`).
 2. **Download Pre-trained Weights and Label Files:**  
-   The model weights (`saved_weights_relevance.pt` and `saved_weights_multiclass.pt`) and JSON label mapping files (e.g., `reverse_dictionary_classes.json`) are available from the external drive:
+   The model weights (`saved_weights_relevance.pt` and `saved_weights_multiclass.pt`) are available from the external drive:
    [https://drive.uca.fr/d/6058b184ba134a02a708/](https://drive.uca.fr/d/6058b184ba134a02a708/)
 3. **Run Python Pipelines:**  
    - Execute `EstimationClimateFinance.py` (if applicable) to perform financial estimation and forecasting.
