@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "rule": "han_to_bert_v1",
+    "alpha": 0.05,
+    "spec": "Correlated",
+    "skip_patterns": ["^h[12]\\.\\(Intercept\\)$", "^h[12]\\.ProviderISO_", "^h[12]\\.RecipientISO_", "^h[12]\\.Year_", "^h[12]\\.(Water|Transport|Agri|EnvProtect|MultiSec|Disaster|Energy)$", "^h[12]\\.climate_class_", "^(corr12|sigma|Sd|Log-likelihood|McFadden Pseudo-R2|Coefficient of Determination .*|N)$"],
+    "timestamp_utc": "2026-05-08 12:15:19 UTC",
+    "inputs": {
+      "adapt_han": "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance/regressions/main/adaptation/combined_regression_results.csv",
+      "adapt_bert": "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance/regressions/main/adaptation/combined_regression_results3.csv",
+      "miti_han": "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance/regressions/main/mitigation/combined_regression_results.csv",
+      "miti_bert": "/Users/pierrebeaucoral/Documents/Pro/Thèse CERDI/Recherche/Determinant of climate finance/regressions/main/mitigation/combined_regression_results3.csv"
+    },
+    "counts": {
+      "total_rows": 373,
+      "total_skipped": 291,
+      "total_candidates": 80,
+      "total_selected": 44,
+      "n_selected_per_stage": {
+        "adapt_h1": 13,
+        "adapt_h2": 13,
+        "miti_h1": 11,
+        "miti_h2": 7
+      }
+    }
+  },
+  "selected": {
+    "adapt_h1": ["colony", "comrelig", "CPIAbudget", "distw", "EIA", "MDBDummy", "NDC16", "NDC17", "NDC18", "NDCActOnly", "NDCnonGHG", "ProviderGDPtot", "RecipientPop"],
+    "adapt_h2": ["comlang", "comrelig", "CPIAbudget", "CPIAPublicAdm", "EIA", "InvestAgree", "MDBDummy", "Providerdebt", "ProviderfisB", "ProviderPop", "Recipientdebt", "RecipientGDPtot", "WRI"],
+    "miti_h1": ["comrelig", "CPIAbudget", "EIA", "InvestAgree", "MDBDummy", "NDC16", "NDC17", "NDC18", "ProviderGDPtot", "ProviderPop", "wto"],
+    "miti_h2": ["comrelig", "CPIAPublicAdm", "Providerdebt", "ProviderfisB", "ProviderGDPtot", "Recipientdebt", "RecipientGDPtot"]
+  }
+}

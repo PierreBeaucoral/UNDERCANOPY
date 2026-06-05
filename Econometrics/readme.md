@@ -99,6 +99,39 @@ The script is organized into the following major steps:
 
 ---
 
+## Revised analysis (2025 revision)
+
+The paper revision adds a larger estimation, identification, and average-partial-
+effects (APE) layer on top of the original `Estimations.R`. All revised scripts
+are repo-relative: paths resolve with `here::here()` from the repository root
+(a `.here` sentinel ships at the root so this also works from a ZIP download with
+no `.git`). Run them in this order:
+
+1. **Prepare data.** Unzip `Data/Data.zip` into `Econometrics/Data/` (gives the
+   six `reg*.csv` panels), unzip the gravity files in
+   `Climate finance estimation/Raw Data/`, and download the two external inputs
+   (`DataPB.csv`, `climate_finance_total.csv`) into `Econometrics/Data/` — see
+   `external-data.md`.
+2. **`HurdleRegHuei_parallel.R`** — main double-hurdle estimation. Writes the
+   headline tables to `regressions/main/` (and re-writes the six `reg*.csv`
+   panels to `Data/`).
+3. **`HurdleRegHuei_parallel_robustness.R`** — robustness re-estimation. Writes
+   to `regressions/robustness/`.
+4. **`select_variables.R`** — Han→BERT variable selection. Writes the manifest
+   and diagnostics to `regressions/var_selection/`.
+5. **`HurdleRegHuei_selected.R`** — slim re-estimation on the selected
+   covariates. Writes to `regressions/selected/`.
+6. **`Identification/` scripts** — each reads the panels from `Data/` and sources
+   `_helpers.R` (except `marginal_effects_ape.R`, which is self-contained). They
+   are independent of one another and write to
+   `regressions/{aipw,aipw_h1,lee_bounds,lee_bounds_h1,common_support,ape}/`.
+
+See `regressions/readme.md` and `Identification/readme.md` for the full mapping
+of scripts to outputs. Heavy diagnostic `.rds` objects are not shipped and
+regenerate on run. The original `Estimations.R` is unchanged.
+
+---
+
 ## Contact
 
 For further questions or additional information regarding this analysis, please contact:
