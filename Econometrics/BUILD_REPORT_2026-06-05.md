@@ -366,3 +366,84 @@ Both edited scripts re-parsed clean:
 $ Rscript -e 'invisible(parse("HurdleRegHuei_parallel.R"))'             # PARSE OK
 $ Rscript -e 'invisible(parse("HurdleRegHuei_parallel_robustness.R"))'  # PARSE OK
 ```
+
+---
+
+## CF-estimation replication fixes (2026-06-05)
+
+**Scope:** Minimal, targeted fixes to the "Climate finance estimation" component
+to remove replication blockers. No model/training/tokenization logic touched —
+only the `wd` line, one leading-slash join, the `here`/`os` imports needed for
+auto-resolution, and documentation. The existing `os.chdir(wd)`/`setwd(wd)` /
+`rm(list=ls())` style was deliberately preserved per request.
+
+### BLOCKER 1 — `wd` placeholders made location-relative (auto-resolving)
+
+Each script's `wd` now resolves from the script's own location via
+`os.path.dirname(os.path.abspath(__file__))`. Anchor (ROOT = `Climate finance
+estimation/`, DATA = `.../Data/`) was chosen per script so every existing
+`os.path.join(wd, ...)`, `os.chdir(wd)`, and post-chdir relative read/write
+resolves to the same intended file as before.
+
+| File | Old `wd` | New `wd` | Anchor |
+|------|----------|----------|--------|
+| `Training and Classifying/Classify.py` | `".../UNDERCANOPY/Climate finance estimation/Data/"` (no chdir) | `abspath(join(_HERE, os.pardir, "Data"))` | DATA |
+| `Training and Classifying/Relevance_classifier.py` | `"./UNDERCANOPY/Climate finance estimation/Data/"` | `abspath(join(_HERE, os.pardir, "Data"))` | DATA |
+| `Training and Classifying/multi-classifier.py` | `"./UNDERCANOPY/Climate finance estimation/Data/"` | `abspath(join(_HERE, os.pardir, "Data"))` | DATA |
+| `Training and Classifying/EstimationClimateFinance.py` | `"/UNDERCANOPY-main/Climate finance estimation/"` | `abspath(join(_HERE, os.pardir))` | ROOT |
+| `Training and Classifying/meta.py` | `"./UNDERCANOPY/Climate finance estimation/Data/"` | `abspath(join(_HERE, os.pardir, "Data")) + os.sep` | DATA |
+| `Figures/graph_final.py` | `"...UNDERCANOPY/Climate finance estimation/"` | `abspath(join(_HERE, os.pardir))` | ROOT |
+
+- `meta.py` keeps a trailing `os.sep` because it builds paths by string
+  concatenation (`wd + "ClassifiedCRS.csv"`), not `os.path.join` — preserves
+  exact prior behavior.
+- All six scripts already imported `os`; no new `os` import needed. `os.chdir`
+  / `os.pardir` calls left in place.
+- Each edited line carries a one-line comment noting paths now resolve relative
+  to the script location, with a manual-override note.
+
+R scripts (`Raw Data/UploadBase.R`, `Raw Data/Treatment.R`): `wd` now resolves
+via `here::here("Climate finance estimation", "Raw Data")` wrapped in
+`tryCatch(..., error = function(e) getwd())`, so it auto-anchors when a
+`.here`/`.git` marker is reachable and falls back to `getwd()` (with an inline
+"set this manually" marker) otherwise. `library(here)` added at top. The
+existing if/else + `setwd(wd)` block and `rm(list = ls())` were left intact.
+
+| File | Old `wd` | New `wd` |
+|------|----------|----------|
+| `Raw Data/UploadBase.R` | `"./UNDERCANOPY/Climate finance estimation/Raw Data"` | `tryCatch(here::here("Climate finance estimation","Raw Data"), error=function(e) getwd())` |
+| `Raw Data/Treatment.R` | `"./UNDERCANOPY/Climate finance estimation/Raw Data"` | `tryCatch(here::here("Climate finance estimation","Raw Data"), error=function(e) getwd())` |
+
+### BLOCKER 2 — `graph_final.py` leading-slash path bug
+
+`Figures/graph_final.py` line 20:
+- Old: `pd.read_csv(os.path.join(wd,'/Data/DataPB.csv'), ...)` — leading `/`
+  made `os.path.join` discard `wd` and return absolute `/Data/DataPB.csv`.
+- New: `pd.read_csv(os.path.join(wd, 'Data', 'DataPB.csv'), ...)` — now resolves
+  (with ROOT-anchored `wd`) to `Climate finance estimation/Data/DataPB.csv`.
+- Repo-wide grep confirmed no other `os.path.join(x, '/...')` leading-slash
+  instances in any CF `.py` file.
+
+### BLOCKER 3 — undocumented required inputs
+
+`Climate finance estimation/Data/readme.md` "Additional Data Storage" list
+expanded. Previously listed only DataPB / Data / ClassifiedCRS /
+ClimateFinanceTotal / weights. Now also documents, each with its expected path
+and producing/consuming script:
+- `projects_clusters.csv` (required input for `EstimationClimateFinance.py`,
+  produced by the upstream ML clustering step; NOT shipped) — the originally
+  missing file.
+- `train_set.csv`, `Data.csv`, `DataPB.csv`, `ClassifiedCRS.csv`,
+  `climate_finance_total.csv`, `reverse_dictionary_classes.json` /
+  `dictionary_classes.json`, the two `saved_weights_*.pt`, and the raw OECD CRS
+  `.txt` extracts.
+
+### Self-check
+
+- `python3 -m py_compile` on all 6 edited `.py`: **PASS** (6/6).
+- grep for broken placeholders (`...` path, leading-slash join,
+  `/UNDERCANOPY-main/`, hardcoded `wd = "..."`): **zero remaining** (only
+  matches for `...` are log-message ellipses like `"Evaluating..."`).
+- Path-resolution simulation confirms each `wd` lands on its intended folder and
+  `graph_final.py`'s `DataPB.csv` resolves under `Data/`.
+- No model/training/tokenization logic altered.

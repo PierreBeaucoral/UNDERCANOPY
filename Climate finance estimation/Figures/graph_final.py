@@ -6,8 +6,13 @@ from matplotlib.patches import Patch
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
-# Set working directory
-wd = "...UNDERCANOPY/Climate finance estimation/"
+# Set working directory.
+# Paths resolve relative to this script's location: this script lives in
+# 'Climate finance estimation/Figures/', so the project root
+# ('Climate finance estimation/') is one level up. Override `wd` manually if
+# you reorganize the tree.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+wd = os.path.abspath(os.path.join(_HERE, os.pardir))
 os.chdir(wd)
 
 # -------------------------
@@ -17,7 +22,7 @@ def csv_import(filepath, delimiter="|"):
     return pd.read_csv(filepath, encoding='utf8', delimiter=delimiter, dtype={'text': str, "USD_Disbursement": float})
 
 # Import datasets
-df_origin = pd.read_csv(os.path.join(wd,'/Data/DataPB.csv'), 
+df_origin = pd.read_csv(os.path.join(wd, 'Data', 'DataPB.csv'),
                         encoding='utf8', delimiter='|')
 df = csv_import(os.path.join(wd, 'Data/climate_finance_total.csv'))
 
