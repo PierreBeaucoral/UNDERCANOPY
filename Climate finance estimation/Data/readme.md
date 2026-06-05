@@ -69,13 +69,17 @@ Each of these sources is described in detail below.
 ## Additional Data Storage
 
 Due to the large size of some intermediate and final datasets used in this research, several key data files are not stored directly in this GitHub repository. Instead, they are hosted on an external drive and include:
-- **DataPB.csv**
-- **Data.csv**
-- **ClassifiedCRS.csv**
-- **ClimateFinanceTotal.csv**
-- **Saved Model Weights:** Both `saved_weights_relevance.pt` and `saved_weights_multiclass.pt`
+- **`projects_clusters.csv`** — required input for `EstimationClimateFinance.py`. Produced by the upstream ML clustering / topic-modeling step (the BERTopic clustering of CRS project texts); it carries the `Topic`, `raw_text`, and `CustomName` fields used to build the training set. **Not shipped in this repository.** Expected at `Climate finance estimation/Data/projects_clusters.csv`. Download from the external drive below.
+- **`train_set.csv`** — balanced training set read by `Relevance_classifier.py`, `multi-classifier.py`, and produced by `EstimationClimateFinance.py`. Expected at `Climate finance estimation/Data/train_set.csv`.
+- **`Data.csv`** — raw project data classified by `Classify.py`. Expected at `Climate finance estimation/Data/Data.csv`.
+- **`DataPB.csv`** — preprocessed CRS panel (with Rio markers) read by `Figures/graph_final.py`; written by `Raw Data/Treatment.R`. Expected at `Climate finance estimation/Data/DataPB.csv`.
+- **`ClassifiedCRS.csv`** — full classified dataset written by `Classify.py` and read by `meta.py`. Expected at `Climate finance estimation/Data/ClassifiedCRS.csv`.
+- **`climate_finance_total.csv`** (referred to elsewhere as ClimateFinanceTotal) — meta-categorized dataset written by `meta.py` and read by `Figures/graph_final.py`. Expected at `Climate finance estimation/Data/climate_finance_total.csv`.
+- **`reverse_dictionary_classes.json`** and **`dictionary_classes.json`** — label-mapping files written by `multi-classifier.py` and read by `Classify.py`. Expected at `Climate finance estimation/Data/`.
+- **Saved Model Weights:** Both `saved_weights_relevance.pt` and `saved_weights_multiclass.pt`, expected at `Climate finance estimation/Data/`.
+- **Raw OECD CRS `.txt` files** — the annual and multi-year CRS extracts read by `Raw Data/UploadBase.R` (e.g. `CRS 2006 Data.txt`, `CRS 1973-94 data.txt`). Obtain from the OECD CRS website and place in `Climate finance estimation/Raw Data/CRS/`.
 
-You can access these files at [the following link](https://drive.uca.fr/d/6058b184ba134a02a708/)
+You can access the hosted files at [the following link](https://drive.uca.fr/d/6058b184ba134a02a708/)
 
 ---
 

@@ -2,8 +2,12 @@ import pandas as pd
 import os
 import sys 
 
-# Set the working directory
-wd = "./UNDERCANOPY/Climate finance estimation/Data/"
+# Set the working directory.
+# Paths resolve relative to this script's location: scripts live in
+# 'Climate finance estimation/Training and Classifying/', so the 'Data/'
+# folder is one level up. Override `wd` manually if you reorganize the tree.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+wd = os.path.abspath(os.path.join(_HERE, os.pardir, "Data")) + os.sep
 os.chdir(wd)
 
 def csv_import(name, delimiter=","):
