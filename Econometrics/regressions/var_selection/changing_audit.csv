@@ -1,0 +1,27 @@
+var_pretty,status_adapt_h1,status_adapt_h2,status_miti_h1,status_miti_h2
+CPIAPublicAdm,stable_sig,CHANGING:flip,stable_sig,CHANGING:gain
+CPIAbudget,CHANGING:flip,CHANGING:gain,CHANGING:gain,stable_ns
+Colonial Ties,CHANGING:loss,stable_sig,stable_sig,stable_sig
+Common Language,stable_sig,CHANGING:loss,stable_sig,stable_sig
+Common Religion,CHANGING:loss,CHANGING:loss,CHANGING:loss,CHANGING:loss
+Distance,CHANGING:loss,stable_sig,stable_sig,stable_sig
+EIA,CHANGING:loss,CHANGING:gain,CHANGING:loss,stable_ns
+INDC15,stable_ns,absent,stable_ns,absent
+INDC16,CHANGING:loss,absent,CHANGING:loss,absent
+INDC17,CHANGING:loss,absent,CHANGING:flip,absent
+INDC18,CHANGING:flip,absent,CHANGING:loss,absent
+Investment Agreement,stable_sig,CHANGING:loss,CHANGING:flip,stable_sig
+MDBDummy,CHANGING:loss,CHANGING:flip,CHANGING:loss,stable_sig
+NDCActOnly,CHANGING:loss,absent,stable_sig,absent
+NDCnonGHG,CHANGING:flip,absent,stable_sig,absent
+Provider GDP,CHANGING:loss,stable_sig,CHANGING:loss,CHANGING:flip
+Provider Population,stable_ns,CHANGING:flip,CHANGING:loss,stable_sig
+Provider debt to GDP,absent,CHANGING:flip,absent,CHANGING:loss
+Provider fiscal Bal,absent,CHANGING:loss,absent,CHANGING:gain
+Recipient Fiscal Bal,absent,stable_ns,absent,stable_ns
+Recipient GDP,stable_sig,CHANGING:gain,stable_sig,CHANGING:gain
+Recipient Population,CHANGING:loss,stable_ns,stable_ns,stable_sig
+Recipient debt to GDP,absent,CHANGING:gain,absent,CHANGING:gain
+WRI (Vulnerability),stable_sig,CHANGING:gain,stable_sig,stable_ns
+sd.sd,absent,absent,absent,absent
+wto,stable_sig,stable_ns,CHANGING:flip,stable_ns

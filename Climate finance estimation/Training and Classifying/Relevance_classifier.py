@@ -29,8 +29,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 logging.info(f"Using device: {device}")
 
-# Working directory
-wd = "./UNDERCANOPY/Climate finance estimation/Data/"
+# Working directory.
+# Paths resolve relative to this script's location: scripts live in
+# 'Climate finance estimation/Training and Classifying/', so the 'Data/'
+# folder is one level up. Override `wd` manually if you reorganize the tree.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+wd = os.path.abspath(os.path.join(_HERE, os.pardir, "Data"))
 os.chdir(wd)
 
 # Hyperparameters configuration

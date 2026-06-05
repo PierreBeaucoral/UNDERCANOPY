@@ -1,0 +1,153 @@
+Han -> BERT variable selection summary
+Generated: 2026-05-08 12:15:19 UTC
+Rule: han_to_bert_v1  alpha = 0.05  spec = Correlated
+
+Counts
+  total rows             : 373
+  skipped (FE/aux)       : 291
+  candidates (h1+h2)     : 80
+  selected               : 44
+
+Selected adapt_h1 (13)
+  - colony
+  - comrelig
+  - CPIAbudget
+  - distw
+  - EIA
+  - MDBDummy
+  - NDC16
+  - NDC17
+  - NDC18
+  - NDCActOnly
+  - NDCnonGHG
+  - ProviderGDPtot
+  - RecipientPop
+
+Selected adapt_h2 (13)
+  - comlang
+  - comrelig
+  - CPIAbudget
+  - CPIAPublicAdm
+  - EIA
+  - InvestAgree
+  - MDBDummy
+  - Providerdebt
+  - ProviderfisB
+  - ProviderPop
+  - Recipientdebt
+  - RecipientGDPtot
+  - WRI
+
+Selected miti_h1 (11)
+  - comrelig
+  - CPIAbudget
+  - EIA
+  - InvestAgree
+  - MDBDummy
+  - NDC16
+  - NDC17
+  - NDC18
+  - ProviderGDPtot
+  - ProviderPop
+  - wto
+
+Selected miti_h2 (7)
+  - comrelig
+  - CPIAPublicAdm
+  - Providerdebt
+  - ProviderfisB
+  - ProviderGDPtot
+  - Recipientdebt
+  - RecipientGDPtot
+
+Per-row detail (selected only)
+ outcome stage            var_pretty         var_raw  estimate_han   pvalue_han
+   adapt    h1         Colonial Ties          colony   0.507121925 0.000000e+00
+   adapt    h1       Common Religion        comrelig   0.579931920 0.000000e+00
+   adapt    h1            CPIAbudget      CPIAbudget   0.060723013 5.432464e-04
+   adapt    h1              Distance           distw  -0.388375822 0.000000e+00
+   adapt    h1                   EIA             EIA   0.026835899 8.773410e-04
+   adapt    h1              MDBDummy        MDBDummy   0.392183842 0.000000e+00
+   adapt    h1                INDC16           NDC16  -0.221666119 1.614264e-13
+   adapt    h1                INDC17           NDC17  -0.141139948 1.004597e-04
+   adapt    h1                INDC18           NDC18   0.134264210 6.032906e-03
+   adapt    h1            NDCActOnly      NDCActOnly   0.311612651 0.000000e+00
+   adapt    h1             NDCnonGHG       NDCnonGHG   0.055871851 2.836603e-03
+   adapt    h1          Provider GDP  ProviderGDPtot   0.371382281 5.373253e-06
+   adapt    h1  Recipient Population    RecipientPop  -0.252601667 5.368253e-05
+   adapt    h2       Common Language         comlang   0.060485430 8.522516e-12
+   adapt    h2       Common Religion        comrelig   0.079423695 2.079369e-04
+   adapt    h2            CPIAbudget      CPIAbudget   0.007538096 3.812276e-01
+   adapt    h2         CPIAPublicAdm   CPIAPublicAdm   0.027511483 4.190057e-02
+   adapt    h2                   EIA             EIA   0.001877448 5.049004e-01
+   adapt    h2  Investment Agreement     InvestAgree   0.018394689 8.727313e-04
+   adapt    h2              MDBDummy        MDBDummy   0.026720801 1.650545e-05
+   adapt    h2  Provider debt to GDP    Providerdebt  -0.087366392 1.349881e-02
+   adapt    h2   Provider fiscal Bal    ProviderfisB  -0.334038691 9.303425e-03
+   adapt    h2   Provider Population     ProviderPop   4.648808841 4.661379e-03
+   adapt    h2 Recipient debt to GDP   Recipientdebt   0.028379924 2.431885e-01
+   adapt    h2         Recipient GDP RecipientGDPtot   0.018905035 2.961868e-01
+   adapt    h2   WRI (Vulnerability)             WRI   0.038525469 8.389866e-01
+    miti    h1       Common Religion        comrelig   0.511520640 0.000000e+00
+    miti    h1            CPIAbudget      CPIAbudget   0.036309010 6.422126e-02
+    miti    h1                   EIA             EIA   0.043807796 5.658117e-07
+    miti    h1  Investment Agreement     InvestAgree   0.100315567 2.390117e-07
+    miti    h1              MDBDummy        MDBDummy   0.416655529 0.000000e+00
+    miti    h1                INDC16           NDC16  -0.398245519 0.000000e+00
+    miti    h1                INDC17           NDC17  -0.434008113 0.000000e+00
+    miti    h1                INDC18           NDC18   0.176558287 4.363548e-04
+    miti    h1          Provider GDP  ProviderGDPtot   1.008759330 0.000000e+00
+    miti    h1   Provider Population     ProviderPop -12.480090787 9.413803e-12
+    miti    h1                   wto             wto  -0.089350597 3.718777e-05
+    miti    h2       Common Religion        comrelig   0.099612511 1.607740e-04
+    miti    h2         CPIAPublicAdm   CPIAPublicAdm   0.035028341 5.778077e-02
+    miti    h2  Provider debt to GDP    Providerdebt  -0.250256914 1.616177e-06
+    miti    h2   Provider fiscal Bal    ProviderfisB  -0.191500031 2.282930e-01
+    miti    h2          Provider GDP  ProviderGDPtot   0.093594964 4.599120e-02
+    miti    h2 Recipient debt to GDP   Recipientdebt   0.008691422 7.928172e-01
+    miti    h2         Recipient GDP RecipientGDPtot   0.040310794 9.775501e-02
+ estimate_bert  pvalue_bert      reason
+  0.0331326248 5.096496e-01    lost_sig
+ -0.0528787944 5.153914e-01    lost_sig
+ -0.0919805437 4.022977e-03 sign_change
+ -0.0241902634 4.419934e-01    lost_sig
+ -0.0136297819 2.826878e-01    lost_sig
+  0.0043879161 3.482523e-01    lost_sig
+ -0.0043724587 9.111159e-01    lost_sig
+ -0.0640583308 1.596478e-01    lost_sig
+ -0.2618493319 3.282724e-05 sign_change
+  0.0367132445 2.754926e-01    lost_sig
+ -0.0725617440 1.087758e-02 sign_change
+ -0.0787708445 4.939865e-01    lost_sig
+ -0.1098992640 2.924802e-01    lost_sig
+  0.0117176064 1.824682e-01    lost_sig
+  0.0001627253 9.948885e-01    lost_sig
+  0.0265065862 8.350114e-03  gained_sig
+ -0.0414837908 1.692645e-03 sign_change
+  0.0092860888 7.675299e-03  gained_sig
+  0.0043450311 5.346668e-01    lost_sig
+ -0.0025525870 2.458833e-02 sign_change
+  0.1314405566 2.590315e-03 sign_change
+ -0.2564479143 9.126378e-02    lost_sig
+ -3.0357130928 2.384542e-04 sign_change
+ -0.0868789537 2.073962e-04  gained_sig
+ -0.0287155270 2.360609e-03  gained_sig
+ -0.6794532026 7.657830e-11  gained_sig
+  0.0174221786 6.546243e-01    lost_sig
+ -0.0426512546 8.063366e-03  gained_sig
+ -0.0022040220 7.356043e-01    lost_sig
+ -0.0736322101 8.446318e-08 sign_change
+  0.0028743117 2.647236e-01    lost_sig
+ -0.0074894276 7.026042e-01    lost_sig
+  0.0597880702 1.295755e-02 sign_change
+  0.0315173376 3.123457e-01    lost_sig
+  0.0578001158 1.075173e-01    lost_sig
+ -0.3586636180 5.538550e-01    lost_sig
+  0.0725979146 1.045618e-04 sign_change
+ -0.0253106255 2.122721e-01    lost_sig
+  0.0523855993 8.489493e-06  gained_sig
+ -0.0625485150 5.437544e-02    lost_sig
+ -0.3710402462 1.183335e-03  gained_sig
+ -0.1548463547 5.308431e-10 sign_change
+ -0.0525009523 4.507267e-03  gained_sig
+  0.0323659074 6.795091e-07  gained_sig

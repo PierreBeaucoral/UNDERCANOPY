@@ -1,0 +1,61 @@
+prose_block,finance,variable_pretty,status_in_panel_h1,status_in_panel_h2,in_changing_either
+adapt_AIPW,adapt,Common Language,stable_sig,CHANGING:loss,TRUE
+adapt_AIPW,adapt,Common Religion,CHANGING:loss,CHANGING:loss,TRUE
+adapt_AIPW,adapt,Investment Agreement,stable_sig,CHANGING:loss,TRUE
+adapt_AIPW,adapt,MDBDummy,CHANGING:loss,CHANGING:flip,TRUE
+adapt_AIPW,adapt,INDC15,stable_ns,absent,FALSE
+adapt_AIPW,adapt,INDC17,CHANGING:loss,absent,TRUE
+adapt_AIPW,adapt,Provider debt to GDP,absent,CHANGING:flip,TRUE
+adapt_AIPW,adapt,Provider fiscal Bal,absent,CHANGING:loss,TRUE
+adapt_Lee,adapt,MDBDummy,CHANGING:loss,CHANGING:flip,TRUE
+adapt_Lee,adapt,INDC17,CHANGING:loss,absent,TRUE
+adapt_Lee,adapt,INDC18,CHANGING:flip,absent,TRUE
+adapt_Lee,adapt,Recipient GDP,stable_sig,gained_sig,FALSE
+adapt_Lee,adapt,Recipient Population,CHANGING:loss,stable_ns,TRUE
+adapt_Lee,adapt,Provider Population,stable_ns,CHANGING:flip,TRUE
+adapt_Lee,adapt,Recipient debt to GDP,absent,gained_sig,FALSE
+adapt_Lee,adapt,Recipient Fiscal Bal,absent,stable_ns,FALSE
+adapt_Lee,adapt,Provider fiscal Bal,absent,CHANGING:loss,TRUE
+miti_AIPW,miti,Colonial Ties,stable_sig,stable_sig,FALSE
+miti_AIPW,miti,NDCActOnly,stable_sig,absent,FALSE
+miti_AIPW,miti,NDCnonGHG,stable_sig,absent,FALSE
+miti_AIPW,miti,INDC15,stable_ns,absent,FALSE
+miti_AIPW,miti,INDC18,CHANGING:loss,absent,TRUE
+miti_AIPW,miti,CPIAPublicAdm,stable_sig,gained_sig,FALSE
+miti_AIPW,miti,CPIAbudget,gained_sig,stable_ns,FALSE
+miti_AIPW,miti,Recipient GDP,stable_sig,gained_sig,FALSE
+miti_AIPW,miti,Provider Population,CHANGING:loss,stable_sig,TRUE
+miti_AIPW,miti,Provider fiscal Bal,absent,gained_sig,FALSE
+miti_Lee,miti,MDBDummy,CHANGING:loss,stable_sig,TRUE
+miti_Lee,miti,NDCActOnly,stable_sig,absent,FALSE
+miti_Lee,miti,NDCnonGHG,stable_sig,absent,FALSE
+miti_Lee,miti,INDC15,stable_ns,absent,FALSE
+miti_Lee,miti,CPIAbudget,gained_sig,stable_ns,FALSE
+miti_Lee,miti,Recipient GDP,stable_sig,gained_sig,FALSE
+miti_Lee,miti,Provider GDP,CHANGING:loss,CHANGING:flip,TRUE
+miti_Lee,miti,Recipient Population,stable_ns,stable_sig,FALSE
+miti_Lee,miti,Provider Population,CHANGING:loss,stable_sig,TRUE
+miti_Lee,miti,Recipient debt to GDP,absent,gained_sig,FALSE
+miti_Lee,miti,Recipient Fiscal Bal,absent,stable_ns,FALSE
+miti_Lee,miti,Provider fiscal Bal,absent,gained_sig,FALSE
+adapt_NotSust,adapt,Colonial Ties,CHANGING:loss,stable_sig,TRUE
+adapt_NotSust,adapt,wto,stable_sig,stable_ns,FALSE
+adapt_NotSust,adapt,EIA,CHANGING:loss,gained_sig,TRUE
+adapt_NotSust,adapt,NDCActOnly,CHANGING:loss,absent,TRUE
+adapt_NotSust,adapt,NDCnonGHG,CHANGING:flip,absent,TRUE
+adapt_NotSust,adapt,INDC16,CHANGING:loss,absent,TRUE
+adapt_NotSust,adapt,WRI (Vulnerability),stable_sig,gained_sig,FALSE
+adapt_NotSust,adapt,CPIAPublicAdm,stable_sig,CHANGING:flip,TRUE
+adapt_NotSust,adapt,CPIAbudget,CHANGING:flip,gained_sig,TRUE
+adapt_NotSust,adapt,Provider GDP,CHANGING:loss,stable_sig,TRUE
+adapt_NotSust,adapt,Distance,CHANGING:loss,stable_sig,TRUE
+miti_NotSust,miti,Common Language,stable_sig,stable_sig,FALSE
+miti_NotSust,miti,Common Religion,CHANGING:loss,CHANGING:loss,TRUE
+miti_NotSust,miti,wto,CHANGING:flip,stable_ns,TRUE
+miti_NotSust,miti,EIA,CHANGING:loss,stable_ns,TRUE
+miti_NotSust,miti,Investment Agreement,CHANGING:flip,stable_sig,TRUE
+miti_NotSust,miti,INDC16,CHANGING:loss,absent,TRUE
+miti_NotSust,miti,INDC17,CHANGING:flip,absent,TRUE
+miti_NotSust,miti,WRI (Vulnerability),stable_sig,stable_ns,FALSE
+miti_NotSust,miti,Provider debt to GDP,absent,CHANGING:loss,TRUE
+miti_NotSust,miti,Distance,stable_sig,stable_sig,FALSE
