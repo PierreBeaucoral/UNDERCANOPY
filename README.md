@@ -201,14 +201,35 @@ When downloaded you repository should have the same organization:
 ├── Econometrics
 │   ├── Data
 │   │   ├── Readme.md
-│   │   ├── reg1_mitigation.csv
-│   │   ├── reg1.csv
-│   │   ├── reg2_mitigation.csv
-│   │   ├── reg2.csv
-│   │   ├── reg3_mitigation.csv
-│   │   └── reg3.csv
-│   ├── Estimations.R
+│   │   └── Data.zip                     # unzip -> reg{1,2,3}{,_mitigation}.csv
+│   ├── Estimations.R                    # original estimation script (unchanged)
+│   ├── HurdleRegHuei_parallel.R         # revision: main double-hurdle estimation
+│   ├── HurdleRegHuei_parallel_robustness.R  # revision: robustness re-estimation
+│   ├── select_variables.R               # revision: Han -> BERT variable selection
+│   ├── HurdleRegHuei_selected.R         # revision: slim re-estimation
+│   ├── external-data.md                 # external inputs (DataPB, climate_finance_total)
 │   ├── readme.md
+│   ├── Identification                   # revision: identification / robustness / APE
+│   │   ├── _helpers.R
+│   │   ├── identification_aipw.R
+│   │   ├── identification_aipw_h1.R
+│   │   ├── identification_lee_bounds.R
+│   │   ├── identification_lee_bounds_h1.R
+│   │   ├── identification_common_support.R
+│   │   ├── marginal_effects_ape.R
+│   │   └── readme.md
+│   ├── regressions                      # revision: result tables (heavy .rds not shipped)
+│   │   ├── main/{adaptation,mitigation}
+│   │   ├── robustness/{adaptation,mitigation}
+│   │   ├── selected/{adaptation,mitigation}
+│   │   ├── var_selection
+│   │   ├── common_support
+│   │   ├── aipw
+│   │   ├── aipw_h1
+│   │   ├── lee_bounds
+│   │   ├── lee_bounds_h1
+│   │   ├── ape
+│   │   └── readme.md
 │   └── Results
 │       ├── adaptation
 │       │   ├── combined_regression_results.csv
