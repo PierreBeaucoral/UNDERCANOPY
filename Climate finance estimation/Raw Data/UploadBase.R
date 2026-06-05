@@ -26,11 +26,19 @@ library(data.table)
 library(hms)
 library(flextable)
 library(skimr)
+library(here)
 
 ##### Declare path for datasets #####
 
-# Define the desired working directory path
-wd <- "./UNDERCANOPY/Climate finance estimation/Raw Data"
+# Define the desired working directory path.
+# Resolves automatically to 'Climate finance estimation/Raw Data' relative to
+# the repository root (detected by here() via the .here/.git anchor). If no
+# anchor is reachable, falls back to the current working directory -- in that
+# case, set `wd` by hand to 'PATH/TO/UNDERCANOPY/Climate finance estimation/Raw Data'.
+wd <- tryCatch(
+  here::here("Climate finance estimation", "Raw Data"),
+  error = function(e) getwd()  # <-- set this manually if here() cannot anchor
+)
 
 # Get the current working directory
 current_wd <- getwd()

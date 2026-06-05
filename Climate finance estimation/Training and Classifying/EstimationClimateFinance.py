@@ -9,8 +9,13 @@ Created on Tue Aug 27 11:18:24 2024
 import pandas as pd
 import os
 
-# Step 1: Set up the working directory
-wd = "/UNDERCANOPY-main/Climate finance estimation/"
+# Step 1: Set up the working directory.
+# Paths resolve relative to this script's location: scripts live in
+# 'Climate finance estimation/Training and Classifying/', so the project root
+# ('Climate finance estimation/') is one level up. Override `wd` manually if
+# you reorganize the tree.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+wd = os.path.abspath(os.path.join(_HERE, os.pardir))
 os.chdir(wd)
 
 # Step 2: Load the first CSV file with low_memory=False to prevent DtypeWarnings
