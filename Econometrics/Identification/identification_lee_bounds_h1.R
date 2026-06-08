@@ -32,7 +32,8 @@ out_dir <- here::here("Econometrics", "regressions", "lee_bounds_h1")
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 t0 <- Sys.time()
-N_BOOT <- 100L
+N_BOOT <- as.integer(Sys.getenv("UC_N_BOOT", unset = "100"))
+stopifnot(!is.na(N_BOOT), N_BOOT >= 1L)   # guard against a malformed UC_N_BOOT override
 COEFS <- EXPANDED_COVARS
 COEFS_BINARY <- EXPANDED_COVARS_BINARY
 COEFS_CONTINUOUS <- EXPANDED_COVARS_CONTINUOUS

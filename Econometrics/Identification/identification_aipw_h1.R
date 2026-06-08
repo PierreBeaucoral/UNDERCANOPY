@@ -27,7 +27,8 @@ out_dir <- here::here("Econometrics", "regressions", "aipw_h1")
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 t0 <- Sys.time()
-N_BOOT <- 100L
+N_BOOT <- as.integer(Sys.getenv("UC_N_BOOT", unset = "100"))
+stopifnot(!is.na(N_BOOT), N_BOOT >= 1L)   # guard against a malformed UC_N_BOOT override
 TRIM_GRID <- list(c(0.01, 0.99), c(0.05, 0.95), c(0.10, 0.90))
 APE_VARS <- EXPANDED_COVARS
 EPS_PROB_LOCAL <- 1e-12

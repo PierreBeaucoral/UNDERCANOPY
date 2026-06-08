@@ -63,7 +63,8 @@ dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 t0 <- Sys.time()
 
 # ── Constants ────────────────────────────────────────────────────────────────
-N_BOOT <- 300L                   # FIX 3 — production target.
+N_BOOT <- as.integer(Sys.getenv("UC_N_BOOT", unset = "300"))   # FIX 3 — production target.
+stopifnot(!is.na(N_BOOT), N_BOOT >= 1L)   # guard against a malformed UC_N_BOOT override
 N_BOOT_FALLBACK <- 200L          # If 300-rep budget overruns we drop to this.
 WALL_CLOCK_BUDGET_SEC <- 3 * 3600  # 3 hours total
 MIN_FE_CELLS <- 30L              # Drop FE dummies with <30 obs in either margin

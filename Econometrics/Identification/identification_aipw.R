@@ -26,7 +26,8 @@ out_dir <- here::here("Econometrics", "regressions", "aipw")
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 t0 <- Sys.time()
-N_BOOT <- 300L                        # production setting per task spec
+N_BOOT <- as.integer(Sys.getenv("UC_N_BOOT", unset = "300"))                        # production setting per task spec
+stopifnot(!is.na(N_BOOT), N_BOOT >= 1L)   # guard against a malformed UC_N_BOOT override
 TRIM_GRID <- list(
   c(0.01, 0.99),
   c(0.05, 0.95),
