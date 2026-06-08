@@ -5,3 +5,7 @@
 .RData
 __pycache__/
 *.pyc
+
+# Smoke-test transients (regenerated locally; Data.zip is the shipped artifact)
+Econometrics/Data/reg*.csv
+Econometrics/regressions/common_support/cells_C_*.rds
