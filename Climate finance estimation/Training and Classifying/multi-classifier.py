@@ -328,17 +328,36 @@ with open(os.path.join(wd, 'dictionary_classes.json'), 'w') as f:
 with open(os.path.join(wd, 'reverse_dictionary_classes.json'), 'w') as f:
     f.write(json.dumps(reverse_label_dict))
 
-# Get more generic predictions
-test_y_generic = ['Adaptation' if y in [10, 13] else 'Environment' if y in [0, 1, 2, 4, 5, 6, 7, 8, 9, 12] else 'Mitigation' for y in test_y]
+# Macro-categories, defined by class NAME (not by index) so that they stay correct
+# whatever order the label dictionary has. Class names are those of the
+# production model (Data/dictionary_classes.json, 17 classes).
+ADAPTATION_CLASSES = {"Climate Adaptation", "Resilience"}
+ENVIRONMENT_CLASSES = {
+    "Environmental Policy Admin",
+    "Forest Sustainability: Tropical, Sustainable Management, Deforestation, REDD+",
+    "Enviro Ed Trainings", "Biodiv Conserv Prog", "Combat Desertif Convention",
+    "National Capacities - Enviro Dev Plan Mainstreaming", "Wildlife conservation",
+    "Marine-Coastal Protected Areas Mgmt. (CMB)",
+}
+MITIGATION_CLASSES = {
+    "Wind power farms", "Geothermal Explr/Plants", "Renewable energy", "Solar PV Energy",
+    "Hydro Power Plants Rehab", "Green Growth Strategies", "Air Pollution Mitigation",
+}
 
-preds_generic = []
-for pred in preds:
-    if pred in [10, 13]:  # Adaptation
-        preds_generic.append('Adaptation')
-    elif pred in [0, 1, 2, 4, 5, 6, 7, 8, 9, 12]:  # Environment
-        preds_generic.append('Environment')
-    else:  # Any other predictions are Mitigation
-        preds_generic.append('Mitigation')
+def to_macro(class_id):
+    """Map a class index to its macro-category through its class name."""
+    name = reverse_label_dict[int(class_id)]
+    if name in ADAPTATION_CLASSES:
+        return 'Adaptation'
+    if name in ENVIRONMENT_CLASSES:
+        return 'Environment'
+    if name in MITIGATION_CLASSES:
+        return 'Mitigation'
+    raise ValueError(f"Class without a macro-category: {name}")
+
+# Get more generic predictions (same grouping as meta.py)
+test_y_generic = [to_macro(y) for y in test_y]
+preds_generic = [to_macro(pred) for pred in preds]
 
 # Print the classification report on the test set for more generic categories
 print("Generic Classification Report:")

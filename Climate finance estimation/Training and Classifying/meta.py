@@ -1,6 +1,7 @@
 import pandas as pd
 import os
-import sys 
+import sys
+import json 
 
 # Set the working directory.
 # Paths resolve relative to this script's location: scripts live in
@@ -23,10 +24,32 @@ length_start = df.shape[0]
 if length_start < 2700000:
     print(length_start)
 
-# Add meta categories
-adaptation_categories = [10, 13]
-environment_categories = [0, 1, 2, 5, 9, 12, 14, 15]
-mitigation_categories = [3, 4, 6, 7, 8, 11, 16]
+# Macro-categories, defined by class NAME (not by index) so that they stay correct
+# whatever order the label dictionary has. Class names are those of the
+# production model (Data/dictionary_classes.json, 17 classes).
+ADAPTATION_CLASSES = {"Climate Adaptation", "Resilience"}
+ENVIRONMENT_CLASSES = {
+    "Environmental Policy Admin",
+    "Forest Sustainability: Tropical, Sustainable Management, Deforestation, REDD+",
+    "Enviro Ed Trainings", "Biodiv Conserv Prog", "Combat Desertif Convention",
+    "National Capacities - Enviro Dev Plan Mainstreaming", "Wildlife conservation",
+    "Marine-Coastal Protected Areas Mgmt. (CMB)",
+}
+MITIGATION_CLASSES = {
+    "Wind power farms", "Geothermal Explr/Plants", "Renewable energy", "Solar PV Energy",
+    "Hydro Power Plants Rehab", "Green Growth Strategies", "Air Pollution Mitigation",
+}
+
+# Translate the name-based groups into the class numbers used by the classifier,
+# via the label dictionary written by multi-classifier.py.
+with open(os.path.join(wd, "dictionary_classes.json")) as f:
+    label_dict = json.load(f)
+_unassigned = set(label_dict) - ADAPTATION_CLASSES - ENVIRONMENT_CLASSES - MITIGATION_CLASSES
+if _unassigned:
+    sys.exit(f"Classes without a macro-category: {sorted(_unassigned)}")
+adaptation_categories = [label_dict[c] for c in ADAPTATION_CLASSES if c in label_dict]
+environment_categories = [label_dict[c] for c in ENVIRONMENT_CLASSES if c in label_dict]
+mitigation_categories = [label_dict[c] for c in MITIGATION_CLASSES if c in label_dict]
 
 
 df['meta_category'] = 'None'

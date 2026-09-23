@@ -23,7 +23,7 @@ UNDERCANOPY is organized into several interrelated components:
       - Filter projects by relevance (binary classification).
       - Assign detailed climate finance categories (multiclass classification).
   - **EstimationClimateFinance.py:**  
-    Applies time series forecasting (e.g., SARIMA) to estimate future climate finance flows based on historical disbursement and commitment data.
+    Builds the balanced training set (`train_set.csv`) from the topic-model clusters (`projects_clusters.csv`).
   - **Meta-Categorization Script:**  
     - `meta.py` processes the output of `Classify.py` (`ClassifiedCRS.csv`).
     - Assigns high-level meta-categories (Adaptation, Mitigation, Environment) based on detailed classification numbers.
@@ -42,7 +42,7 @@ Each graph is accompanied by detailed descriptions in its own README to explain 
 ### 4. Data Sources and Resources
 The project relies on several data sources:
 - **Raw Project Data:**  
-  Clustering outputs from OECD CRS aid activities (e.g., `Data.csv`).
+  The pipeline starts from the raw OECD CRS files. The upstream step (CRS consolidation and BERTopic clustering of project descriptions) lives in the companion repository [`ML-clustering-of-development-activities`](https://github.com/PierreBeaucoral/ML-clustering-of-development-activities); it produces `projects_clusters.csv`, `topic_info.csv` and the topic-merged project file used here as `Data.csv` (written there as `merged_projects.csv`).
 - **Preprocessed Training Data:**  
   A balanced dataset (`train_set.csv`) for model training, derived via extensive filtering and sampling.
 - **Auxiliary Files:**  
@@ -114,7 +114,9 @@ This section of the project focuses on the econometric analysis of the determina
    [https://drive.uca.fr/d/6058b184ba134a02a708/](https://drive.uca.fr/d/6058b184ba134a02a708/)
 
    > **Please download all the files and arrange them in required folder according to the directory map under**
-3. **Run Python Pipelines** (scripts in `Climate finance estimation/Training and Classifying/` unless noted), in this order:
+3. **Step 0 — upstream clustering (companion repository).** From the raw OECD CRS files, run [`ML-clustering-of-development-activities`](https://github.com/PierreBeaucoral/ML-clustering-of-development-activities): `Data-preparation/DatasetCreation.R` (builds `Dataset.csv`), then `Machine learning/Topic modelling.py` (BERTopic). Copy its outputs into `Climate finance estimation/Data/`: `projects_clusters.csv`, `topic_info.csv`, and `merged_projects.csv` renamed to `Data.csv`.
+
+4. **Run Python Pipelines** (scripts in `Climate finance estimation/Training and Classifying/` unless noted), in this order:
    1. `EstimationClimateFinance.py`: builds the balanced training set `Data/train_set.csv` from `Data/projects_clusters.csv`.
    2. `Relevance_classifier.py`: fine-tunes and evaluates the relevance (binary) classifier.
    3. `multi-classifier.py`: fine-tunes and evaluates the multiclass classifier and writes the label dictionaries.
@@ -174,7 +176,6 @@ locations given in `Econometrics/external-data.md`.
 ├── Climate finance estimation
 │   ├── Data
 │   │   ├── classification_report.csv                     # relevance-classifier test report
-│   │   ├── classification_reportmulticlassifier.csv      # 18-class report
 │   │   ├── classification_reportmulticlassifier_gen.csv  # macro-category report
 │   │   ├── dictionary_classes.json
 │   │   ├── pvcciNational.csv            # FERDI PVCCI, input of PVCCImap.R
