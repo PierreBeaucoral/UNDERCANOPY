@@ -13,11 +13,11 @@
 # mhurdle() is deterministic MLE with no random components.
 #
 # Install if needed:
-#   install.packages(c("future", "future.apply"))
+#   packages "future" and "future.apply" (CRAN)
 # =============================================================================
 
 # ── Libraries ─────────────────────────────────────────────────────────────────
-# NOTE: several libraries below are not required for estimation; see build report
+# NOTE: several libraries below (mapping/visualisation) are not required for the estimation itself
 library(readr); library(png);  library(purrr);    library(gtable)
 library(gridExtra); library(ggplot2); library(dplyr); library(knitr)
 library(kableExtra); library(pander); library(tidyverse); library(tmap)
@@ -32,7 +32,7 @@ library(here)
 # SECTION 1 — RAW DATA LOADING
 # =============================================================================
 
-# external: download from https://drive.uca.fr/d/6058b184ba134a02a708/
+# external: rebuilt from the raw OECD CRS files by "Climate finance estimation/Raw Data/Treatment.R" (see Econometrics/external-data.md)
 Rio_Data <- fread(here::here("Econometrics", "Data", "DataPB.csv"))
 
 Rio_data_adaptation <- Rio_Data %>%
@@ -687,17 +687,17 @@ message("All 6 regression CSVs written.")
 result1 <- texreg(list(adapt_Stn,  adapt_Slnd),  custom.model.names = c("log-normal", "Correlated log-normal"), caption = "Estimation of double hurdle selection models", label = "tab:sep", pos = "ht", digits = 3)
 result2 <- texreg(list(adapt_Stn2, adapt_Slnd2), custom.model.names = c("log-normal", "Correlated log-normal"), caption = "Estimation of double hurdle selection models", label = "tab:sep", pos = "ht", digits = 3)
 result3 <- texreg(list(adapt_Stn3, adapt_Slnd3), custom.model.names = c("log-normal", "Correlated log-normal"), caption = "Estimation of double hurdle selection models", label = "tab:sep", pos = "ht", digits = 3)
-dir.create(here::here("Econometrics", "Results"), recursive = TRUE, showWarnings = FALSE)
-write.table(result1, here::here("Econometrics", "Results", "Baseline Result for Adaptation"))
-write.table(result2, here::here("Econometrics", "Results", "Rio Result for Adaptation"))
-write.table(result3, here::here("Econometrics", "Results", "ClimateFinanceBERT Result for Adaptation"))
+dir.create(here::here("Econometrics", "regressions", "main", "texreg"), recursive = TRUE, showWarnings = FALSE)
+write.table(result1, here::here("Econometrics", "regressions", "main", "texreg", "Baseline Result for Adaptation"))
+write.table(result2, here::here("Econometrics", "regressions", "main", "texreg", "Rio Result for Adaptation"))
+write.table(result3, here::here("Econometrics", "regressions", "main", "texreg", "ClimateFinanceBERT Result for Adaptation"))
 
 result_m1 <- texreg(list(miti_Stn1, miti_Slnd1), custom.model.names = c("log-normal", "Correlated log-normal"), caption = "Estimation of double hurdle selection models", label = "tab:sep", pos = "ht", digits = 3)
 result_m2 <- texreg(list(miti_Stn2, miti_Slnd2), custom.model.names = c("log-normal", "Correlated log-normal"), caption = "Estimation of double hurdle selection models", label = "tab:sep", pos = "ht", digits = 3)
 result_m3 <- texreg(list(miti_Stn3, miti_Slnd3), custom.model.names = c("log-normal", "Correlated log-normal"), caption = "Estimation of double hurdle selection models", label = "tab:sep", pos = "ht", digits = 3)
-write.table(result_m1, here::here("Econometrics", "Results", "Baseline Result for  Mitigation 103950 obs"))
-write.table(result_m2, here::here("Econometrics", "Results", "Rio Result for Mitigation"))
-write.table(result_m3, here::here("Econometrics", "Results", "ClimateFinanceBERT Result for Mitigation"))
+write.table(result_m1, here::here("Econometrics", "regressions", "main", "texreg", "Baseline Result for  Mitigation 103950 obs"))
+write.table(result_m2, here::here("Econometrics", "regressions", "main", "texreg", "Rio Result for Mitigation"))
+write.table(result_m3, here::here("Econometrics", "regressions", "main", "texreg", "ClimateFinanceBERT Result for Mitigation"))
 
 # =============================================================================
 # SECTION 12 — VIF DIAGNOSTICS

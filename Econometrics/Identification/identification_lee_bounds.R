@@ -26,7 +26,8 @@ out_dir <- here::here("Econometrics", "regressions", "lee_bounds")
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 t0 <- Sys.time()
-N_BOOT <- 300L
+N_BOOT <- as.integer(Sys.getenv("UC_N_BOOT", unset = "300"))
+stopifnot(!is.na(N_BOOT), N_BOOT >= 1L)   # guard against a malformed UC_N_BOOT override
 # Expanded coverage 2026-05-04: every variable that changes sign or
 # significance between Han / Rio / BERT in §4 of the EARE Round-1 revision.
 COEFS <- EXPANDED_COVARS

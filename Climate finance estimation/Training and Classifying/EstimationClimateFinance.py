@@ -16,7 +16,6 @@ import os
 # you reorganize the tree.
 _HERE = os.path.dirname(os.path.abspath(__file__))
 wd = os.path.abspath(os.path.join(_HERE, os.pardir))
-os.chdir(wd)
 
 # Step 2: Load the first CSV file with low_memory=False to prevent DtypeWarnings
 try:
@@ -40,7 +39,7 @@ filtered_df1 = df1[df1['Topic'].isin(Climate_Topics)].copy()
 
 # Save the projects that are not in Climate_Topics
 non_climate_df1 = df1[~df1['Topic'].isin(Climate_Topics)].drop_duplicates(subset='raw_text').copy()
-non_climate_output_path = './Data/non_climate_projects.csv'
+non_climate_output_path = os.path.join(wd, 'Data/non_climate_projects.csv')
 non_climate_df1.to_csv(non_climate_output_path, index=False)
 
 # Step 4: Rename 'CustomName' based on 'Topic' values and add 'relevance' column
@@ -256,6 +255,6 @@ print(f"Final count - Relevance 1: {num_relevance_1_final}, Relevance 0: {num_re
 
     
 # Save the complete climate finance data
-merged_df.to_csv(wd + 'Data/train_set.csv', encoding='utf8', index=False, header=True)
+merged_df.to_csv(os.path.join(wd, 'Data/train_set.csv'), sep=';', encoding='utf8', index=False, header=True)
 
 print("Final balanced dataset saved")

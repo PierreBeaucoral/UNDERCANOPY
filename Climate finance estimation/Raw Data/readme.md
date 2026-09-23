@@ -8,10 +8,8 @@ This R script is the second stage in the overall data preparation pipeline for c
 
 This script performs the following key tasks:
 
-1. **Environment and Working Directory Setup:**  
-   - Clears the current workspace.
-   - Sets the working directory to the desired location.
-   - Verifies that the current working directory is correct, and if not, changes it accordingly.
+1. **Path Setup:**  
+   - Loads `here` and resolves every path from the repository root with `here::here()` (the repo ships a `.here` sentinel). No working directory needs to be set.
 
 2. **Data Import from UploadBase.R:**  
    - Sources the `UploadBase.R` script, which loads multiple raw data files into a list object (`BDD`).  
@@ -35,15 +33,14 @@ This script performs the following key tasks:
 
 6. **Subsampling for Beta Testing:**  
    - A random subsample of 10,000 records is created (for rapid beta testing of downstream analyses).
-   - Both the full consolidated dataset and the beta sample are saved as CSV files using a pipe (`|`) as the delimiter.
+   - Both the full consolidated dataset and the beta sample are saved as CSV files in `Climate finance estimation/Raw Data/`, using a pipe (`|`) as the delimiter.
 
 ---
 
 ## Detailed Workflow
 
-1. **Clearing and Setting the Environment:**  
-   - The script begins by clearing all objects from the R environment.
-   - It then defines and checks the desired working directory, changing it if necessary.
+1. **Setting Paths:**  
+   - All input and output paths are built with `here::here()` relative to the repository root.
 
 2. **Importing Data:**  
    - The `UploadBase.R` script is sourced, which loads raw CRS data into the variable `BDD` (a list of data frames) along with additional objects (`Bound`, `Period`).
@@ -69,34 +66,30 @@ This script performs the following key tasks:
 
 6. **Creating a Beta Subsample and Saving Data:**  
    - A random sample of 10,000 rows is selected from `Data` for beta testing.
-   - The full dataset is saved as `DataPB.csv` and the beta subsample as `DataPBsample.csv` in the `Data` folder, using the pipe (`|`) as the field delimiter.
+   - The full dataset is saved as `DataPB.csv` and the beta subsample as `DataPBsample.csv` in `Climate finance estimation/Raw Data/`, using the pipe (`|`) as the field delimiter. Copy `DataPB.csv` to `Econometrics/Data/` (econometric scripts) and to `Climate finance estimation/Data/` (`Figures/graph_final.py`); see `Econometrics/external-data.md`.
 
 ---
 
 ## Replication Instructions
 
 1. **Download Required Data Files:**  
-   - Before running this script, download the original CRS data files from the [OECD website](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false) as instructed in the documentation for `UploadBase.R`. Ensure these files are placed in the expected directory structure.
+   - Before running this script, download the original CRS data files from the [OECD website](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false) and place them in `Climate finance estimation/Raw Data/CRS/` under the exact names listed in `CRS/Readme.md` (see also `Econometrics/external-data.md`).
 
 2. **Run the Treatment.R Script:**  
    - First, run `Treatment.R` to load and combine the raw data files. This script initializes the list `BDD` and other necessary objects.
 
 3. **Set Up Your R Environment:**  
-   - Open R or RStudio and install the required packages (e.g., `data.table`, `dplyr`, `ggplot2`) if they are not already installed.
-   - Set the working directory to:
-     ```r
-     ".../Raw Data"
-     ```
+   - Open R or RStudio and install the required packages (e.g., `here`, `data.table`, `dplyr`, `ggplot2`) if they are not already installed.
+   - No working directory needs to be set: paths resolve from the repository root via `here::here()`.
 
 4. **Execute the Script:**  
-   - Run this script (source it) by:
+   - Run this script from anywhere inside the repository:
      ```r
-     source("YourScriptName.R")
+     source(here::here("Climate finance estimation", "Raw Data", "Treatment.R"))
      ```
    - The script will process the data, create the unified `raw_text` variable, remove unwanted rows, and save the processed datasets as CSV files.
 
 5. **Verify the Output:**  
-   - Check the console for messages indicating the working directory status and memory clean-up.
-   - Verify that `DataPB.csv` and `DataPBsample.csv` are created in the `Data` folder.
+   - Verify that `DataPB.csv` and `DataPBsample.csv` are created in `Climate finance estimation/Raw Data/`.
 
 ---

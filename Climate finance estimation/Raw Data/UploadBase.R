@@ -1,6 +1,3 @@
-# Clear the environment
-rm(list = ls())
-
 ######### Packages ############
 library(readr)
 library(png)
@@ -30,28 +27,9 @@ library(here)
 
 ##### Declare path for datasets #####
 
-# Define the desired working directory path.
-# Resolves automatically to 'Climate finance estimation/Raw Data' relative to
-# the repository root (detected by here() via the .here/.git anchor). If no
-# anchor is reachable, falls back to the current working directory -- in that
-# case, set `wd` by hand to 'PATH/TO/UNDERCANOPY/Climate finance estimation/Raw Data'.
-wd <- tryCatch(
-  here::here("Climate finance estimation", "Raw Data"),
-  error = function(e) getwd()  # <-- set this manually if here() cannot anchor
-)
-
-# Get the current working directory
-current_wd <- getwd()
-
-# Check if the current working directory is different from the desired directory
-if (current_wd != wd) {
-  # If different, set the working directory to the desired directory
-  setwd(wd)
-  print(paste("Changed working directory to:", getwd()))
-} else {
-  # If already in the desired directory, print a message indicating the current directory
-  print(paste("Current working directory is already set to:", getwd()))
-}
+# All paths are resolved with here::here() from the repository root (the repo
+# ships a `.here` sentinel). Raw CRS .txt files go in
+# 'Climate finance estimation/Raw Data/CRS/' (see CRS/Readme.md).
 
 ####### Years taken into account #####
 
@@ -70,7 +48,7 @@ Yearly <- c(2006: 2021)
 
 for (i in  Yearly) {
   filename<-paste0("CRS"," ",i," ", "Data")
-  wd<-paste0("./CRS/CRS"," ",i," ", "Data", ".txt")
+  wd<-here::here("Climate finance estimation", "Raw Data", "CRS", paste0("CRS"," ",i," ", "Data", ".txt"))
   assign(filename,fread(wd,  encoding =  "Latin-1"))
 }
 
@@ -86,11 +64,11 @@ CRS <- lapply(Yearly, function(x) {
 ##### For pluri-annual datasets #####
 
 
-"CRS 1973-94 data" <- fread("./CRS/CRS 1973-94 data.txt",  encoding =  "Latin-1")
-"CRS 1995-99 data" <- fread("./CRS/CRS 1995-99 data.txt",  encoding =  "Latin-1")
-"CRS 2000-01 data" <- fread("./CRS/CRS 2000-01 data.txt",  encoding =  "Latin-1")
-"CRS 2002-03 data" <- fread("./CRS/CRS 2002-03 data.txt",  encoding =  "Latin-1")
-"CRS 2004-05 data" <- fread("./CRS/CRS 2004-05 data.txt",  encoding =  "Latin-1")
+"CRS 1973-94 data" <- fread(here::here("Climate finance estimation", "Raw Data", "CRS", "CRS 1973-94 data.txt"),  encoding =  "Latin-1")
+"CRS 1995-99 data" <- fread(here::here("Climate finance estimation", "Raw Data", "CRS", "CRS 1995-99 data.txt"),  encoding =  "Latin-1")
+"CRS 2000-01 data" <- fread(here::here("Climate finance estimation", "Raw Data", "CRS", "CRS 2000-01 data.txt"),  encoding =  "Latin-1")
+"CRS 2002-03 data" <- fread(here::here("Climate finance estimation", "Raw Data", "CRS", "CRS 2002-03 data.txt"),  encoding =  "Latin-1")
+"CRS 2004-05 data" <- fread(here::here("Climate finance estimation", "Raw Data", "CRS", "CRS 2004-05 data.txt"),  encoding =  "Latin-1")
 
 
 ####### Creation of a list with all datasets #######

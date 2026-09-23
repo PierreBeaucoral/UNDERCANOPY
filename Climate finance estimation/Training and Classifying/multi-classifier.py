@@ -43,7 +43,6 @@ logging.info(f"Using device: {device}")
 # folder is one level up. Override `wd` manually if you reorganize the tree.
 _HERE = os.path.dirname(os.path.abspath(__file__))
 wd = os.path.abspath(os.path.join(_HERE, os.pardir, "Data"))
-os.chdir(wd)
 
 # Hyperparameters
 base_model = 'climatebert/distilroberta-base-climate-f'
@@ -66,7 +65,7 @@ training_args = {
 
 # Load dataset
 path = os.path.join(wd, "train_set.csv")
-df = pd.read_csv(path)
+df = pd.read_csv(path, sep=";")
 
 # Data preparation function
 def prepare_data(df, tokenizer, n_words, random_states, only_relevant_data):
@@ -315,27 +314,57 @@ for i, prediction in enumerate(preds):
 print(label_dict)
 print(classification_report(test_y, preds))
 
+# Save the fine-grained report (rows = class names, in label-index order)
+class_ids = list(range(len(label_dict)))
+pd.DataFrame(classification_report(test_y, preds, labels=class_ids,
+                                   target_names=[reverse_label_dict[i] for i in class_ids],
+                                   output_dict=True)).transpose() \
+    .to_csv(os.path.join(wd, "classification_reportmulticlassifier.csv"))
+
 # Save the label dictionary and reverse mapping to JSON files
-with open('dictionary_classes.json', 'w') as f:
+with open(os.path.join(wd, 'dictionary_classes.json'), 'w') as f:
     f.write(json.dumps(label_dict))
 
-with open('reverse_dictionary_classes.json', 'w') as f:
+with open(os.path.join(wd, 'reverse_dictionary_classes.json'), 'w') as f:
     f.write(json.dumps(reverse_label_dict))
 
-# Get more generic predictions
-test_y_generic = ['Adaptation' if y in [10, 13] else 'Environment' if y in [0, 1, 2, 4, 5, 6, 7, 8, 9, 12] else 'Mitigation' for y in test_y]
+# Macro-categories, defined by class NAME (not by index) so that they stay correct
+# whatever order the label dictionary has. Class names are those of the
+# production model (Data/dictionary_classes.json, 17 classes).
+ADAPTATION_CLASSES = {"Climate Adaptation", "Resilience"}
+ENVIRONMENT_CLASSES = {
+    "Environmental Policy Admin",
+    "Forest Sustainability: Tropical, Sustainable Management, Deforestation, REDD+",
+    "Enviro Ed Trainings", "Biodiv Conserv Prog", "Combat Desertif Convention",
+    "National Capacities - Enviro Dev Plan Mainstreaming", "Wildlife conservation",
+    "Marine-Coastal Protected Areas Mgmt. (CMB)",
+}
+MITIGATION_CLASSES = {
+    "Wind power farms", "Geothermal Explr/Plants", "Renewable energy", "Solar PV Energy",
+    "Hydro Power Plants Rehab", "Green Growth Strategies", "Air Pollution Mitigation",
+}
 
-preds_generic = []
-for pred in preds:
-    if pred in [10, 13]:  # Adaptation
-        preds_generic.append('Adaptation')
-    elif pred in [0, 1, 2, 4, 5, 6, 7, 8, 9, 12]:  # Environment
-        preds_generic.append('Environment')
-    else:  # Any other predictions are Mitigation
-        preds_generic.append('Mitigation')
+def to_macro(class_id):
+    """Map a class index to its macro-category through its class name."""
+    name = reverse_label_dict[int(class_id)]
+    if name in ADAPTATION_CLASSES:
+        return 'Adaptation'
+    if name in ENVIRONMENT_CLASSES:
+        return 'Environment'
+    if name in MITIGATION_CLASSES:
+        return 'Mitigation'
+    raise ValueError(f"Class without a macro-category: {name}")
+
+# Get more generic predictions (same grouping as meta.py)
+test_y_generic = [to_macro(y) for y in test_y]
+preds_generic = [to_macro(pred) for pred in preds]
 
 # Print the classification report on the test set for more generic categories
 print("Generic Classification Report:")
 print(classification_report(test_y_generic, preds_generic))
+
+# Save the macro-category report used in the paper's classifier-performance table
+pd.DataFrame(classification_report(test_y_generic, preds_generic, output_dict=True)).transpose() \
+    .to_csv(os.path.join(wd, "classification_reportmulticlassifier_gen.csv"))
 
 

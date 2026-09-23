@@ -1,21 +1,3 @@
-# List of required packages
-packages <- c(
-  "readr", "png", "purrr", "gtable", "gridExtra", "ggplot2", "dplyr",
-  "knitr", "kableExtra", "pander", "tidyverse", "tmap", "leaflet", 
-  "ggforce", "treemap", "readxl", "ggalluvial", "migest", "rlist", 
-  "data.table", "hms", "flextable", "skimr"
-)
-
-# Function to install missing packages
-install_if_missing <- function(pkg) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    install.packages(pkg)
-  }
-}
-
-# Apply to all packages
-invisible(lapply(packages, install_if_missing))
-
 library(readr)
 library(png)
 library(purrr)
@@ -39,16 +21,17 @@ library(data.table)
 library(hms)
 library(flextable)
 library(skimr)
+library(here)
+library(fastDummies)
+library(mhurdle)
+library(texreg)
 ##################################################################################
 
 ###### Preparing Data for Climate adaptation ######
-setwd("./UNDERCANOPY/Econometrics/")
-
-rm(list=ls())
-
 ##### Rio Data ##### 
 
-Rio_Data <- fread('./UNDERCANOPY/Climate Finance Estimation/Data/DataPB.csv')
+# external: rebuilt from the raw OECD CRS files by "Climate finance estimation/Raw Data/Treatment.R" (see Econometrics/external-data.md)
+Rio_Data <- fread(here::here("Econometrics", "Data", "DataPB.csv"))
 
 Rio_data_adaptation <- Rio_Data%>%
   filter(ClimateAdaptation %in% (1:2))%>%
@@ -62,7 +45,8 @@ Rio_data_adaptation[Rio_data_adaptation$RecipientName %in% "Kosovo", "Country_Co
 
 #### CLimateFinanceBERT Data ####
 
-ClimateBERT <- fread("./UNDERCANOPY/Climate Finance Estimation/Data/climate_finance_total.csv")
+# external: download from https://drive.uca.fr/d/6058b184ba134a02a708/
+ClimateBERT <- fread(here::here("Econometrics", "Data", "climate_finance_total.csv"))
 
 ClimateBERT_Adaptation <- ClimateBERT%>%
   filter(meta_category == "Adaptation")%>%
@@ -75,7 +59,7 @@ ClimateBERT_Adaptation[ClimateBERT_Adaptation$RecipientName %in% "Kosovo", "Coun
 
 
 #### Huei ####
-data_adaptation<-read.csv("./UNDERCANOPY/Climate Finance Estimation/Raw Data/Adaptation with gravity vars amended FULL Feb 14 2023.csv")
+data_adaptation<-read.csv(here::here("Climate finance estimation", "Raw Data", "Adaptation with gravity vars amended FULL Feb 14 2023.csv"))
 
 data_adaptation$NDC15[data_adaptation$NDC15%in%1 & !data_adaptation$Year%in%2015]<-0
 data_adaptation$NDC15[data_adaptation$NDC16%in%1 & !data_adaptation$Year%in%2016]<-0
@@ -132,7 +116,6 @@ names(regdata_adaptationAdapt)[6]<-"MitiAmount"
 regdata_adaptationAdapt$ProviderISO<-as.character(regdata_adaptationAdapt$ProviderISO)
 regdata_adaptationAdapt$RecipientISO<-as.character(regdata_adaptationAdapt$RecipientISO)
 
-library(fastDummies)
 
 regdata_adaptationAdaptD<-dummy_cols(regdata_adaptationAdapt, select_columns = c("Sector","RecipientISO","ProviderISO","Year"), remove_first_dummy = FALSE)
 
@@ -164,8 +147,6 @@ reg1$IncomeGroup[reg1$IncomeGroup=="UMICs"]<-"BaseUM"
 names(reg1)[33:39]<-c("Water","Transport","Agri","EnvProtect", "MultiSec","Others","Disaster")
 
 
-library(mhurdle)
-library(texreg)
 
 ## hurdle 1
 
@@ -272,7 +253,7 @@ combined_df <- combined_df %>%
   select(Variable, everything())
 
 # Export the combined results to a CSV file
-write.csv(combined_df, "./Results/adaptation/combined_regression_results.csv", row.names = FALSE)
+write.csv(combined_df, here::here("Econometrics", "Results", "adaptation", "combined_regression_results.csv"), row.names = FALSE)
 
 result1<-texreg(list(Stn, Slnd),
                 custom.model.names = c("log-normal", "Correlated log-normal"),
@@ -280,7 +261,7 @@ result1<-texreg(list(Stn, Slnd),
                 label = "tab:sep", pos = "ht", digits =3)
 result1
 
-write.table(result1, "./Results/Baseline Result for Adaptation")
+write.table(result1, here::here("Econometrics", "Results", "Baseline Result for Adaptation"))
 
 # Extract the summary of the models
 stn_summary <- summary(Stn)$coefficients
@@ -364,7 +345,6 @@ names(regRio_data_adaptationAdapt)[34]<-"AdaptAmount"
 regRio_data_adaptationAdapt$ProviderISO<-as.character(regRio_data_adaptationAdapt$ProviderISO)
 regRio_data_adaptationAdapt$RecipientISO<-as.character(regRio_data_adaptationAdapt$RecipientISO)
 
-library(fastDummies)
 
 regRio_data_adaptationAdaptD<-dummy_cols(regRio_data_adaptationAdapt, select_columns = c("RecipientISO","ProviderISO","Year"), remove_first_dummy = FALSE)
 
@@ -393,8 +373,6 @@ reg2$IncomeGroup<-as.character(reg2$IncomeGroup)
 reg2$IncomeGroup[reg2$IncomeGroup=="UMICs"]<-"BaseUM"
 
 
-library(mhurdle)
-library(texreg)
 
 ## hurdle 1
 
@@ -499,7 +477,7 @@ combined_df2 <- combined_df2 %>%
   select(Variable, everything())
 
 # Export the combined results to a CSV file
-write.csv(combined_df2, "./Results/adaptation/combined_regression_results2.csv", row.names = FALSE)
+write.csv(combined_df2, here::here("Econometrics", "Results", "adaptation", "combined_regression_results2.csv"), row.names = FALSE)
 
 
 result2<-texreg(list(Stn2, Slnd2),
@@ -508,7 +486,7 @@ result2<-texreg(list(Stn2, Slnd2),
                 label = "tab:sep", pos = "ht", digits =3)
 result2
 
-write.table(result2, "./Results/adaptation/Rio Result for Adaptation")
+write.table(result2, here::here("Econometrics", "Results", "Rio Result for Adaptation"))
 
 
 ##### Adaptation regression with ClimateFinanceBERT #####
@@ -596,7 +574,6 @@ names(regBERT_data_adaptatioAdapt)[35]<-"AdaptAmount"
 regBERT_data_adaptatioAdapt$ProviderISO<-as.character(regBERT_data_adaptatioAdapt$ProviderISO)
 regBERT_data_adaptatioAdapt$RecipientISO<-as.character(regBERT_data_adaptatioAdapt$RecipientISO)
 
-library(fastDummies)
 
 regBERT_data_adaptatioAdaptD<-dummy_cols(regBERT_data_adaptatioAdapt, select_columns = c( "RecipientISO","ProviderISO","Year","climate_class"), remove_first_dummy = FALSE)
 
@@ -629,8 +606,6 @@ reg3$IncomeGroup[reg3$IncomeGroup=="UMICs"]<-"BaseUM"
 names(reg3)[131]<-c("climate_class_Climate_Adaptation")
 
 
-library(mhurdle)
-library(texreg)
 
 ## hurdle 1
 
@@ -799,7 +774,7 @@ combined_df3 <- combined_df3 %>%
   select(Variable, everything())
 
 # Export the combined results to a CSV file
-write.csv(combined_df3, "./Results/adaptation/combined_regression_results3.csv", row.names = FALSE)
+write.csv(combined_df3, here::here("Econometrics", "Results", "adaptation", "combined_regression_results3.csv"), row.names = FALSE)
 
 result3<-texreg(list(Stn3, Slnd3),
                 custom.model.names = c("log-normal", "Correlated log-normal"),
@@ -807,16 +782,16 @@ result3<-texreg(list(Stn3, Slnd3),
                 label = "tab:sep", pos = "ht", digits =3)
 result3 
 
-write.table(result3, "ClimateFinanceBERT Result for Adaptation")
+write.table(result3, here::here("Econometrics", "Results", "ClimateFinanceBERT Result for Adaptation"))
 
 # Save reg1 as a CSV file
-write.csv(reg1, "./Results/reg1.csv", row.names = FALSE)
+write.csv(reg1, here::here("Econometrics", "Results", "reg1.csv"), row.names = FALSE)
 
 # Save reg2 as a CSV file
-write.csv(reg2, "./Results/reg2.csv", row.names = FALSE)
+write.csv(reg2, here::here("Econometrics", "Results", "reg2.csv"), row.names = FALSE)
 
 # Save reg3 as a CSV file
-write.csv(reg3, "./Results/reg3.csv", row.names = FALSE)
+write.csv(reg3, here::here("Econometrics", "Results", "reg3.csv"), row.names = FALSE)
 
 ####### Mitigation #######
 
@@ -837,7 +812,8 @@ Rio_data_Mitigation[Rio_data_Mitigation$RecipientName %in% "Kosovo", "Country_Co
 
 #### CLimateFinanceBERT Data ####
 
-ClimateBERT <- fread(".../Climate Finance Estimation/Data/climate_finance_total.csv")
+# external: download from https://drive.uca.fr/d/6058b184ba134a02a708/
+ClimateBERT <- fread(here::here("Econometrics", "Data", "climate_finance_total.csv"))
 
 ClimateBERT_Mitigation <- ClimateBERT%>%
   filter(meta_category == "Mitigation")%>%
@@ -853,7 +829,7 @@ ClimateBERT_Mitigation[ClimateBERT_Mitigation$RecipientName %in% "TÃ¼rkiye", "
 
 #### Huei Data ####
 
-data_mitigation<-read.csv(".../Climate Finance Estimation/Raw Data/Mitigation with gravity vars amended FULL Feb 14 2023.csv")
+data_mitigation<-read.csv(here::here("Climate finance estimation", "Raw Data", "Mitigation with gravity vars amended FULL Feb 14 2023.csv"))
 
 
 
@@ -906,7 +882,6 @@ names(regDataMiti)[6]<-"MitiAmount"
 regDataMiti$ProviderISO<-as.character(regDataMiti$ProviderISO)
 
 
-library(fastDummies)
 
 regDataMitiD<-dummy_cols(regDataMiti, select_columns = c("Sector","RecipientISO","ProviderISO","Year"), remove_first_dummy = FALSE)
 
@@ -937,8 +912,6 @@ reg4$IncomeGroup[reg4$IncomeGroup=="UMICs"]<-"BaseUM"
 names(reg4)[33:39]<-c("Water","Transport","Energy","Agri","EnvProtect", "MultiSec","Others")
 
 
-library(mhurdle)
-library(texreg)
 
 ## hurdle 1
 
@@ -1003,7 +976,7 @@ result2<-texreg(list(Stn1, Slnd1),
                 label = "tab:sep", pos = "ht", digits =3)
 result2
 
-write.table(result2, "./Results/mitigation/Baseline Result for  Mitigation 103950 obs")
+write.table(result2, here::here("Econometrics", "Results", "Baseline Result for  Mitigation 103950 obs"))
 
 # Extract the summaries of both models
 summary_Stn <- summary(Stn1)
@@ -1049,7 +1022,7 @@ combined_df <- combined_df %>%
   select(Variable, everything())
 
 # Export the combined results to a CSV file
-write.csv(combined_df, "./Results/mitigation/combined_regression_results.csv", row.names = FALSE)
+write.csv(combined_df, here::here("Econometrics", "Results", "mitigation", "combined_regression_results.csv"), row.names = FALSE)
 
 ##### Adaptation regression with rio markers #####
 
@@ -1123,7 +1096,6 @@ names(regRio_data_Mitigation)[34]<-"MitiAmount"
 regRio_data_Mitigation$ProviderISO<-as.character(regRio_data_Mitigation$ProviderISO)
 regRio_data_Mitigation$RecipientISO<-as.character(regRio_data_Mitigation$RecipientISO)
 
-library(fastDummies)
 
 regRio_data_MitigationD<-dummy_cols(regRio_data_Mitigation, select_columns = c("RecipientISO","ProviderISO","Year"), remove_first_dummy = FALSE)
 
@@ -1152,8 +1124,6 @@ reg5$IncomeGroup<-as.character(reg5$IncomeGroup)
 reg5$IncomeGroup[reg5$IncomeGroup=="UMICs"]<-"BaseUM"
 
 
-library(mhurdle)
-library(texreg)
 
 ## hurdle 1
 
@@ -1258,7 +1228,7 @@ combined_df2 <- combined_df2 %>%
   select(Variable, everything())
 
 # Export the combined results to a CSV file
-write.csv(combined_df2, "./Results/mitigation/combined_regression_results2_mitigation.csv", row.names = FALSE)
+write.csv(combined_df2, here::here("Econometrics", "Results", "mitigation", "combined_regression_results2_mitigation.csv"), row.names = FALSE)
 
 
 result2<-texreg(list(Stn2, Slnd2),
@@ -1267,7 +1237,7 @@ result2<-texreg(list(Stn2, Slnd2),
                 label = "tab:sep", pos = "ht", digits =3)
 result2
 
-write.table(result2, "./Results/mitigation/Rio Result for Mitigation")
+write.table(result2, here::here("Econometrics", "Results", "Rio Result for Mitigation"))
 
 
 ##### Mitigation regression with ClimateFinanceBERT #####
@@ -1370,7 +1340,6 @@ names(regBERT_data_mitigation)[35]<-"MitiAmount"
 regBERT_data_mitigation$ProviderISO<-as.character(regBERT_data_mitigation$ProviderISO)
 regBERT_data_mitigation$RecipientISO<-as.character(regBERT_data_mitigation$RecipientISO)
 
-library(fastDummies)
 
 regBERT_data_mitigationD<-dummy_cols(regBERT_data_mitigation, select_columns = c( "RecipientISO","ProviderISO","Year","climate_class"), remove_first_dummy = FALSE)
 
@@ -1410,8 +1379,6 @@ reg6$IncomeGroup[reg6$IncomeGroup=="UMICs"]<-"BaseUM"
 
 
 
-library(mhurdle)
-library(texreg)
 
 ## hurdle 1
 
@@ -1585,10 +1552,10 @@ summary_result_miti <- compare_datasets(
 
 summary_sample <- left_join(summary_result_adap, summary_result_miti, by="Attribute")
 
-write_csv(summary_sample, "./Results/summary_sample.csv")
+write_csv(summary_sample, here::here("Econometrics", "Results", "summary_sample.csv"))
 
 # Export the combined results to a CSV file
-write.csv(combined_df3, "./Results/mitigation/combined_regression_results3_mitigation.csv", row.names = FALSE)
+write.csv(combined_df3, here::here("Econometrics", "Results", "mitigation", "combined_regression_results3_mitigation.csv"), row.names = FALSE)
 
 result3<-texreg(list(Stn3, Slnd3),
                 custom.model.names = c("log-normal", "Correlated log-normal"),
@@ -1596,16 +1563,16 @@ result3<-texreg(list(Stn3, Slnd3),
                 label = "tab:sep", pos = "ht", digits =3)
 result3 
 
-write.table(result3, "./Results/mitigation/ClimateFinanceBERT Result for Mitigation")
+write.table(result3, here::here("Econometrics", "Results", "ClimateFinanceBERT Result for Mitigation"))
 
 # Save reg1 as a CSV file
-write.csv(reg4, "./Results/reg1_mitigation.csv", row.names = FALSE)
+write.csv(reg4, here::here("Econometrics", "Results", "reg1_mitigation.csv"), row.names = FALSE)
 
 # Save reg2 as a CSV file
-write.csv(reg5, "./Results/reg2_mitigation.csv", row.names = FALSE)
+write.csv(reg5, here::here("Econometrics", "Results", "reg2_mitigation.csv"), row.names = FALSE)
 
 # Save reg3 as a CSV file
-write.csv(reg6, "./Results/reg3_mitigation.csv", row.names = FALSE)
+write.csv(reg6, here::here("Econometrics", "Results", "reg3_mitigation.csv"), row.names = FALSE)
 
 # Select only the MitiAmount column and add a Source identifier
 df_reg4 <- reg4 %>% select(MitiAmount) %>% mutate(Source = "Reg4")

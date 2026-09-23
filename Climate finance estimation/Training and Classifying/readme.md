@@ -128,7 +128,7 @@ The script processes a CSV file containing previously classified climate finance
 #### 1. Setting Up and Data Loading
 
 - **Working Directory:**  
-  The script sets the working directory to a specified path where the project files are stored.
+  The script does not change the working directory. `wd` is set from the script's own location to `Climate finance estimation/`, and every input and output path is built with `os.path.join(wd, ...)`.
 
 - **Loading the Projects Cluster Data:**  
   The file `projects_clusters.csv` is loaded into a DataFrame (`df1`). If the file is not found, the script raises an error.  
@@ -201,7 +201,7 @@ The script processes a CSV file containing previously classified climate finance
 #### 9. Saving the Final Dataset
 
 - **Output:**  
-  The balanced and merged dataset, containing only the columns `text`, `label`, and `relevance`, is saved to `train_set.csv` in the `Data/Estimation of Climate Finance` folder.
+  The balanced and merged dataset, containing only the columns `text`, `label`, and `relevance`, is saved (semicolon-delimited) to `Climate finance estimation/Data/train_set.csv`, replacing the shipped copy.
   
 - **Replication:**  
   This final dataset is intended for use in downstream machine learning tasks such as classification and regression analyses on climate finance.
@@ -216,7 +216,8 @@ The script processes a CSV file containing previously classified climate finance
 2. **Run the Script:**  
    Execute the script using Python 3:
    ```bash
-   python your_script_name.py
+   python "Climate finance estimation/Training and Classifying/EstimationClimateFinance.py"
+   ```
 
 ---
 
@@ -301,7 +302,7 @@ The script processes a CSV file containing previously classified climate finance
 #### 3. Data Loading and Preparation
 
 - **Dataset Loading:**  
-  The dataset is loaded from `Data/Estimation of Climate Finance/train_set.csv` using a semicolon (`;`) delimiter. If the file is not found, the script logs an error and raises an exception.
+  The dataset is loaded from `Climate finance estimation/Data/train_set.csv` using a semicolon (`;`) delimiter. If the file is not found, the script logs an error and raises an exception.
 
 - **Data Preparation Function (`prepare_data`):**  
   - **Filtering:** If `only_relevant_data` is set to `True`, the DataFrame is filtered to keep only rows with `relevance == 1`.
@@ -439,14 +440,15 @@ The script processes a CSV file containing previously classified climate finance
 3. **Running the Script:**  
    Execute the script via the command line:
    ```bash
-   python <script_name>.py
+   python "Climate finance estimation/Training and Classifying/Classify.py"
+   ```
 
 ---
 
 ### meta.py
 
 1. **Setting Up the Environment:**  
-   - The working directory is set using `os.chdir()`, ensuring that all file paths are relative to the specified root.
+   - `wd` is set from the script's own location to `Climate finance estimation/Data/`; every file path is built from `wd` (the working directory is not changed).
    - The CSV file is loaded with a custom `csv_import` function that sets proper encoding and data types for key columns.
 
 2. **Initial Data Filtering:**  
@@ -475,17 +477,19 @@ The script processes a CSV file containing previously classified climate finance
 
 1. **Data Preparation:**  
    Ensure that the input file:
-   - `ClassifiedCRS.csv` is located in the folder `data/Estimation of Climate Finance/` relative to the working directory.
+   - `ClassifiedCRS.csv` is located in `Climate finance estimation/Data/`.
    - This file should contain at least the columns `raw_text`, `climate_class_number`, and `climate_relevance`.
 
 2. **Environment Setup:**  
    - Install the necessary Python packages (e.g., Pandas, NumPy).
-   - Confirm that your working directory (`wd`) is correctly set at the beginning of the script.
+   - No working directory needs to be set: `wd` is derived from the script's location.
 
 3. **Execution:**  
    Run the script using:
    ```bash
-   python <script_name>.py
+   python "Climate finance estimation/Training and Classifying/meta.py"
+   ```
+
 ---
 
 ## Dependencies
@@ -501,4 +505,4 @@ Install dependencies using pip:
 
 ```bash
 pip install pandas numpy matplotlib scikit-learn statsmodels
-
+```
