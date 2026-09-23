@@ -1,6 +1,6 @@
 # Regression outputs (`Econometrics/regressions/`)
 
-This folder holds the result tables for the 2025 revision of the climate-finance
+This folder holds the result tables for the 2026 (first-round) revision of the climate-finance
 determinants paper. Each subfolder is produced by a specific script in
 `Econometrics/` or `Econometrics/Identification/`. Only the small, paper-facing
 tables are shipped; heavy diagnostic objects (`*_diagnostics.rds`,
@@ -30,8 +30,13 @@ download without `.git`). Outputs therefore always land back in this tree.
 - `main/adaptation`, `main/mitigation`: `combined_regression_results.csv` (Han),
   `combined_regression_results3.csv` (BERT). The `*2.csv` (Rio) main tables are
   not shipped to keep the package light; they regenerate on run.
+- `main/`: `vif_adapt_main.csv`, `vif_miti_main.csv` (variance-inflation
+  factors of the main specifications, appendix VIF tables) and
+  `summary_sample.csv` (sample-size comparison across the three measures).
 - `robustness/adaptation`, `robustness/mitigation`:
   `combined_regression_results{,2,3}.csv` (Han, Rio, BERT).
+- `robustness/`: `vif_adapt_robustness.csv`, `vif_miti_robustness.csv`
+  (VIFs of the robustness specifications).
 - `selected/adaptation`, `selected/mitigation`:
   `combined_regression_results_slim_han.csv`,
   `combined_regression_results_slim_bert.csv`.

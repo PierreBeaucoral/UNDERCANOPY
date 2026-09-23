@@ -16,7 +16,7 @@
 # =============================================================================
 
 # ── Libraries ─────────────────────────────────────────────────────────────────
-# NOTE: several libraries below are not required for estimation; see build report
+# NOTE: several libraries below (mapping/visualisation) are not required for the estimation itself
 library(readr); library(png);  library(purrr);    library(gtable)
 library(gridExtra); library(ggplot2); library(dplyr); library(knitr)
 library(kableExtra); library(pander); library(tidyverse); library(tmap)
