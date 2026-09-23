@@ -11,10 +11,10 @@ The project builds on the methodology of Toetzke et al. (2022) (see their reposi
 UNDERCANOPY is organized into several interrelated components:
 
 ### 1. Data Preprocessing and Consolidation (R Scripts)
-- **UploadBase.R:**  
-  - Loads raw OECD CRS data (annual and multi-year text files), [available here](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false).
+- **Treatment.R** (sources **UploadBase.R**):  
+  - `UploadBase.R` loads raw OECD CRS data (annual and multi-year text files), [available here](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false).
   - Cleans, merges, and consolidates project details by creating a unified text field (`raw_text`).
-  - Produces both a full dataset (`DataPB.csv`) and a beta-test subsample (`DataPBsample.csv`).
+  - `Treatment.R` filters the data and writes both a full dataset (`DataPB.csv`) and a beta-test subsample (`DataPBsample.csv`) to `Climate finance estimation/Raw Data/`.
 
 ### 2. Classification and Estimation (Python Scripts)
 - **Classification Pipeline:**  
@@ -25,7 +25,7 @@ UNDERCANOPY is organized into several interrelated components:
   - **EstimationClimateFinance.py:**  
     Applies time series forecasting (e.g., SARIMA) to estimate future climate finance flows based on historical disbursement and commitment data.
   - **Meta-Categorization Script:**  
-    - Processes the output from UploadBase.R (e.g., `ClassifiedCRS.csv`).
+    - `meta.py` processes the output of `Classify.py` (`ClassifiedCRS.csv`).
     - Assigns high-level meta-categories (Adaptation, Mitigation, Environment) based on detailed classification numbers.
     - Performs data integrity checks and saves the final cleaned dataset (`climate_finance_total.csv`).
 
@@ -78,7 +78,7 @@ This section of the project focuses on the econometric analysis of the determina
   - Coefficient estimates, standard errors, and significance levels are extracted from both the uncorrelated and correlated models.
   - Key goodness-of-fit metrics such as log-likelihood, McFadden’s pseudo-R², and the coefficient of determination are calculated.
   - The coefficients from both models are merged into combined data frames for side-by-side comparison.
-  - Publication-ready regression tables are generated using the `texreg` package, and both CSV and text outputs are saved to the `./Results/` directory.
+  - Publication-ready regression tables are generated using the `texreg` package, and both CSV and text outputs of the original-paper script (`Econometrics/Estimations.R`) are saved to `Econometrics/Results/`.
 
 - **Separate Analyses for Adaptation and Mitigation:**  
   The econometric analysis is performed separately for different facets of climate finance (e.g., adaptation vs. mitigation). For each, the script:
@@ -91,9 +91,9 @@ This section of the project focuses on the econometric analysis of the determina
 
 ### Data Preparation (R Scripts)
 1. **Download Raw Data:**  
-   Obtain the raw OECD CRS [text files from the OECD website](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false) and place them in the appropriate folders (e.g., `./Data/CRS/`).
+   Obtain the raw OECD CRS [text files from the OECD website](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false) and place them in `Climate finance estimation/Raw Data/CRS/` under the exact names listed in `Econometrics/external-data.md`.
 2. **Run Treatment.R:**  
-   This script will load (by calling `UploadBase.R`), clean, and merge the raw data to produce `DataPB.csv` and `DataPBsample.csv`.
+   This script will load (by calling `UploadBase.R`), clean, and merge the raw data to produce `DataPB.csv` and `DataPBsample.csv` in `Climate finance estimation/Raw Data/`. All paths resolve from the repository root with `here::here()`; no working directory needs to be set.
 
 ### Model Training and Estimation
 1. **Ensure Dependencies:**  
@@ -102,7 +102,7 @@ This section of the project focuses on the econometric analysis of the determina
      def install_requirements():
          import subprocess, sys
          try:
-             subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", '/UNDERCANOPY/Climate finance estimation/requirements.txt'])
+             subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", 'Climate finance estimation/requirements.txt'])
              print("Requirements installed successfully.")
          except subprocess.CalledProcessError as e:
              print("Failed to install requirements:", e)
@@ -114,42 +114,83 @@ This section of the project focuses on the econometric analysis of the determina
    [https://drive.uca.fr/d/6058b184ba134a02a708/](https://drive.uca.fr/d/6058b184ba134a02a708/)
 
    > **Please download all the files and arrange them in required folder according to the directory map under**
-4. **Run Python Pipelines:**  
-   - Execute `EstimationClimateFinance.py` (if applicable) to perform financial estimation and forecasting.
-   - Execute `Relevance_classifier.py` or related scripts to fine-tune and evaluate the models.
-   - Execute `Multi-classifier.py` or related scripts to fine-tune and evaluate the models.
-   - Execute `Classify.py` to run the classification pipeline.
-   - Execute `Meta.py` to run the meta categories pipeline.
-   - Execute `Graph_Final.py` to run the classification pipeline.
+3. **Run Python Pipelines** (scripts in `Climate finance estimation/Training and Classifying/` unless noted), in this order:
+   1. `EstimationClimateFinance.py`: builds the balanced training set `Data/train_set.csv` from `Data/projects_clusters.csv`.
+   2. `Relevance_classifier.py`: fine-tunes and evaluates the relevance (binary) classifier.
+   3. `multi-classifier.py`: fine-tunes and evaluates the multiclass classifier and writes the label dictionaries.
+   4. `Classify.py`: classifies the full CRS corpus (`Data/Data.csv`) and writes `Data/ClassifiedCRS.csv`.
+   5. `meta.py`: assigns the meta-categories and writes `Data/climate_finance_total.csv`.
+   6. `Climate finance estimation/Figures/graph_final.py`: draws the descriptive figures and the SARIMA forecast (it does not classify anything; see `Climate finance estimation/Figures/readme.md`).
 
 ### Econometric analysis (R) 
 
 You will find the related data and script in the `Econometrics` Folder.
 
+#### Two result folders: original paper vs. revision
+
+| Folder | Version of the paper | Produced by |
+|--------|----------------------|-------------|
+| `Econometrics/Results/` | **Original submission.** Outputs as shipped in April 2025. | `Econometrics/Estimations.R` |
+| `Econometrics/regressions/` | **Revision (2026, first-round R&R) — the version currently under review.** | `HurdleRegHuei_parallel.R`, `HurdleRegHuei_parallel_robustness.R`, `select_variables.R`, `HurdleRegHuei_selected.R`, `Identification/*.R` |
+
+To reproduce the paper under review, use `Econometrics/regressions/`. The
+revision scripts never write to `Econometrics/Results/`: their `texreg` text
+tables (`Baseline/Rio/ClimateFinanceBERT Result for ...`) go to
+`Econometrics/regressions/main/texreg/` and `Econometrics/regressions/robustness/texreg/`.
+
+**Run order (revision).** All scripts resolve paths with `here::here()` from the
+repository root, so they can be run from any working directory inside the repo.
+
+1. Place the external inputs in `Econometrics/Data/`: `climate_finance_total.csv`
+   (from the drive) and `DataPB.csv` (not on the drive; rebuilt with `Treatment.R`), unzip `Econometrics/Data/Data.zip` there, and unzip the
+   gravity files in `Climate finance estimation/Raw Data/` (see
+   `Econometrics/external-data.md`).
+2. `Econometrics/HurdleRegHuei_parallel.R` → `regressions/main/`
+3. `Econometrics/HurdleRegHuei_parallel_robustness.R` → `regressions/robustness/`
+4. `Econometrics/select_variables.R` → `regressions/var_selection/`
+5. `Econometrics/HurdleRegHuei_selected.R` → `regressions/selected/`
+6. `Econometrics/Identification/*.R` (independent of one another) →
+   `regressions/{common_support,aipw,aipw_h1,lee_bounds,lee_bounds_h1,ape}/`
+
+**Original paper.** `Econometrics/Estimations.R` reads the same inputs and
+writes to `Econometrics/Results/`.
+
 ---
 
 # Repository organization
 
-When downloaded you repository should have the same organization: 
+The repository tracks the files below. Large inputs (raw OECD CRS `.txt` files,
+`DataPB.csv`, `climate_finance_total.csv`, model weights, the unzipped gravity
+and `reg*.csv` panels) are not tracked: download or unzip them into the
+locations given in `Econometrics/external-data.md`.
 
 ---
 ```text
+├── .github
+│   └── workflows
+│       └── replication-smoke.yml        # CI: runs the two smoke tests
+├── .gitignore
+├── .here                                # here::here() root sentinel
 ├── Climate finance estimation
 │   ├── Data
-│   │   ├── Data.csv
-│   │   ├── DataPB.csv
+│   │   ├── classification_report.csv                     # relevance-classifier test report
+│   │   ├── classification_reportmulticlassifier.csv      # 18-class report
+│   │   ├── classification_reportmulticlassifier_gen.csv  # macro-category report
 │   │   ├── dictionary_classes.json
-│   │   ├── projects_clusters.csv
+│   │   ├── pvcciNational.csv            # FERDI PVCCI, input of PVCCImap.R
 │   │   ├── readme.md
 │   │   ├── reverse_dictionary_classes.json
+│   │   ├── topic_info.csv               # BERTopic topic table
 │   │   └── train_set.csv
 │   ├── Figures
 │   │   ├── graph_final.py
 │   │   ├── Graphs
-│   │   │   ├── climate_finance_forecast_sarima.png
 │   │   │   ├── combined_adaptation_mitigation_plot.png
 │   │   │   ├── combined_climate_finance_analysis.png
 │   │   │   ├── combined_comparison_by_donor.png
+│   │   │   ├── forecasts
+│   │   │   │   └── climate_finance_forecast_sarima.png
+│   │   │   ├── pipeline_diagram.png
 │   │   │   ├── ratio_comparison_by_donor.png
 │   │   │   ├── readme.md
 │   │   │   ├── stacked_area_adaptation_commitment.png
@@ -157,40 +198,21 @@ When downloaded you repository should have the same organization:
 │   │   │   ├── stacked_area_mitigation_commitment.png
 │   │   │   ├── stacked_area_mitigation_disbursement.png
 │   │   │   ├── stackplot_commitment.png
-│   │   │   └── stackplot_disbursement.png
+│   │   │   ├── stackplot_disbursement.png
+│   │   │   └── vulnerability_map.png
+│   │   ├── pipeline_diagram.R           # Figure 1
+│   │   ├── PVCCImap.R                   # Figure A1
 │   │   └── readme.md
 │   ├── Raw Data
-│   │   ├── Adaptation with gravity vars amended FULL Feb 14 2023.csv
+│   │   ├── adaptation and mitigation with gravity vars.zip   # unzip -> the two gravity CSVs
 │   │   ├── CRS
-│   │   │   ├── CRS 1973-94 data.txt
-│   │   │   ├── CRS 1995-99 data.txt
-│   │   │   ├── CRS 2000-01 data.txt
-│   │   │   ├── CRS 2002-03 data.txt
-│   │   │   ├── CRS 2004-05 data.txt
-│   │   │   ├── CRS 2006 data.txt
-│   │   │   ├── CRS 2007 data.txt
-│   │   │   ├── CRS 2008 data.txt
-│   │   │   ├── CRS 2009 data.txt
-│   │   │   ├── CRS 2010 data.txt
-│   │   │   ├── CRS 2011 data.txt
-│   │   │   ├── CRS 2012 data.txt
-│   │   │   ├── CRS 2013 data.txt
-│   │   │   ├── CRS 2014 data.txt
-│   │   │   ├── CRS 2015 data.txt
-│   │   │   ├── CRS 2016 data.txt
-│   │   │   ├── CRS 2017 data.txt
-│   │   │   ├── CRS 2018 data.txt
-│   │   │   ├── CRS 2019 data.txt
-│   │   │   ├── CRS 2020 data.txt
-│   │   │   ├── CRS 2021 data.txt
-│   │   │   ├── CRS 2022 data.txt
-│   │   │   └── CRS 2023 data.txt
-│   │   ├── Mitigation with gravity vars amended FULL Feb 14 2023.csv
+│   │   │   └── Readme.md                # raw CRS .txt files go here (not tracked)
 │   │   ├── readme.md
 │   │   ├── Treatment.R
 │   │   └── UploadBase.R
 │   ├── readme.md
 │   ├── requirements.txt
+│   ├── smoke_test.py
 │   └── Training and Classifying
 │       ├── Classify.py
 │       ├── EstimationClimateFinance.py
@@ -202,12 +224,13 @@ When downloaded you repository should have the same organization:
 │   ├── Data
 │   │   ├── Readme.md
 │   │   └── Data.zip                     # unzip -> reg{1,2,3}{,_mitigation}.csv
-│   ├── Estimations.R                    # original estimation script (unchanged)
+│   ├── Estimations.R                    # ORIGINAL paper: estimation script -> Results/
 │   ├── HurdleRegHuei_parallel.R         # revision: main double-hurdle estimation
 │   ├── HurdleRegHuei_parallel_robustness.R  # revision: robustness re-estimation
 │   ├── select_variables.R               # revision: Han -> BERT variable selection
 │   ├── HurdleRegHuei_selected.R         # revision: slim re-estimation
-│   ├── external-data.md                 # external inputs (DataPB, climate_finance_total)
+│   ├── smoke_test.R                     # light replication check (run by CI)
+│   ├── external-data.md                 # external inputs and where to put them
 │   ├── readme.md
 │   ├── Identification                   # revision: identification / robustness / APE
 │   │   ├── _helpers.R
@@ -218,19 +241,64 @@ When downloaded you repository should have the same organization:
 │   │   ├── identification_common_support.R
 │   │   ├── marginal_effects_ape.R
 │   │   └── readme.md
-│   ├── regressions                      # revision: result tables (heavy .rds not shipped)
-│   │   ├── main/{adaptation,mitigation}
-│   │   ├── robustness/{adaptation,mitigation}
-│   │   ├── selected/{adaptation,mitigation}
-│   │   ├── var_selection
-│   │   ├── common_support
+│   ├── regressions                      # REVISION (2026 R&R, under review) result tables
 │   │   ├── aipw
+│   │   │   ├── coef_adapt.csv
+│   │   │   ├── coef_miti.csv
+│   │   │   └── trim_stability.csv
 │   │   ├── aipw_h1
-│   │   ├── lee_bounds
-│   │   ├── lee_bounds_h1
+│   │   │   ├── coef_adapt.csv
+│   │   │   ├── coef_miti.csv
+│   │   │   └── trim_stability.csv
 │   │   ├── ape
-│   │   └── readme.md
-│   └── Results
+│   │   │   ├── ape_adapt.csv
+│   │   │   └── ape_miti.csv
+│   │   ├── common_support
+│   │   │   ├── coef_adapt.csv
+│   │   │   ├── coef_miti.csv
+│   │   │   └── summary.rds
+│   │   ├── lee_bounds
+│   │   │   ├── bounds_adapt.csv
+│   │   │   └── bounds_miti.csv
+│   │   ├── lee_bounds_h1
+│   │   │   ├── bounds_adapt.csv
+│   │   │   └── bounds_miti.csv
+│   │   ├── main
+│   │   │   ├── adaptation
+│   │   │   │   ├── combined_regression_results.csv
+│   │   │   │   └── combined_regression_results3.csv
+│   │   │   ├── mitigation
+│   │   │   │   ├── combined_regression_results.csv
+│   │   │   │   └── combined_regression_results3.csv
+│   │   │   ├── summary_sample.csv
+│   │   │   ├── vif_adapt_main.csv
+│   │   │   └── vif_miti_main.csv
+│   │   ├── readme.md
+│   │   ├── robustness
+│   │   │   ├── adaptation
+│   │   │   │   ├── combined_regression_results.csv
+│   │   │   │   ├── combined_regression_results2.csv
+│   │   │   │   └── combined_regression_results3.csv
+│   │   │   ├── mitigation
+│   │   │   │   ├── combined_regression_results.csv
+│   │   │   │   ├── combined_regression_results2.csv
+│   │   │   │   └── combined_regression_results3.csv
+│   │   │   ├── vif_adapt_robustness.csv
+│   │   │   └── vif_miti_robustness.csv
+│   │   ├── selected
+│   │   │   ├── adaptation
+│   │   │   │   ├── combined_regression_results_slim_bert.csv
+│   │   │   │   └── combined_regression_results_slim_han.csv
+│   │   │   └── mitigation
+│   │   │       ├── combined_regression_results_slim_bert.csv
+│   │   │       └── combined_regression_results_slim_han.csv
+│   │   └── var_selection
+│   │       ├── changing_audit.csv
+│   │       ├── prose_vs_audit.csv
+│   │       ├── selected_variables.json
+│   │       ├── selection_diagnostic.csv
+│   │       └── selection_summary.txt
+│   └── Results                          # ORIGINAL paper outputs (Estimations.R)
 │       ├── adaptation
 │       │   ├── combined_regression_results.csv
 │       │   ├── combined_regression_results2.csv
@@ -247,4 +315,5 @@ When downloaded you repository should have the same organization:
 │       ├── Rio Result for Mitigation
 │       └── summary_sample.csv
 ├── LICENSE
-├── README.md
+└── README.md
+```

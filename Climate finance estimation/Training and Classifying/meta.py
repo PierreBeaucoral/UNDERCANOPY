@@ -8,7 +8,6 @@ import sys
 # folder is one level up. Override `wd` manually if you reorganize the tree.
 _HERE = os.path.dirname(os.path.abspath(__file__))
 wd = os.path.abspath(os.path.join(_HERE, os.pardir, "Data")) + os.sep
-os.chdir(wd)
 
 def csv_import(name, delimiter=","):
     x = pd.read_csv(name, encoding='utf8', delimiter=delimiter,

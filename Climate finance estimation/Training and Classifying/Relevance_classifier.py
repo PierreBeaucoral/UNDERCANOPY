@@ -35,7 +35,6 @@ logging.info(f"Using device: {device}")
 # folder is one level up. Override `wd` manually if you reorganize the tree.
 _HERE = os.path.dirname(os.path.abspath(__file__))
 wd = os.path.abspath(os.path.join(_HERE, os.pardir, "Data"))
-os.chdir(wd)
 
 # Hyperparameters configuration
 config = {
@@ -52,7 +51,7 @@ config = {
 # Load dataset
 def load_dataset(path):
     try:
-        df = pd.read_csv(path)
+        df = pd.read_csv(path, sep=";")
         df = df.rename(columns={'label': 'class'})
         df['label'] = df.relevance
         logging.info("Dataset loaded successfully.")
@@ -253,6 +252,11 @@ def main():
         test_preds_labels = np.argmax(test_preds, axis=1)
         report = classification_report(test_y_labels, test_preds_labels, target_names=['Class 0', 'Class 1'])
         logging.info("\n" + report)
+
+        # Save the report for the paper's classifier-performance table
+        # (row labels "0"/"1", columns precision,recall,f1-score,support).
+        pd.DataFrame(classification_report(test_y_labels, test_preds_labels, output_dict=True)).transpose() \
+            .to_csv(os.path.join(wd, "classification_report.csv"))
 
     except Exception as e:
         logging.error(f"An error occurred: {e}")

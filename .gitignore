@@ -9,10 +9,4 @@ __pycache__/
 # Smoke-test transients (regenerated locally; Data.zip is the shipped artifact)
 Econometrics/Data/reg*.csv
 Econometrics/regressions/common_support/cells_C_*.rds
-
-# Local editor / assistant tooling (never part of the replication package)
-.claude/
-.codex/
-AGENTS.md
-CLAUDE.md
-graphify-out/
+Econometrics/Results/reg*.csv

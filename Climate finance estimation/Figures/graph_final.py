@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
 import os
 import numpy as np
 from matplotlib.patches import Patch
@@ -13,7 +14,6 @@ from statsmodels.tsa.statespace.sarimax import SARIMAX
 # you reorganize the tree.
 _HERE = os.path.dirname(os.path.abspath(__file__))
 wd = os.path.abspath(os.path.join(_HERE, os.pardir))
-os.chdir(wd)
 
 # -------------------------
 # Helper and Import Functions
@@ -127,88 +127,195 @@ def rio_stacked_area(cluster, rio_principal, rio_significant, output_folder, rio
     plt.savefig(output_folder, bbox_inches="tight", dpi=1200)
     plt.show()
 
+# Dual-coded for greyscale: each series carries colour + hatch pattern (for areas)
+# or colour + marker shape (for the BERT line), so the figure remains readable
+# without colour. Principal vs significant Rio layers are distinguished by hatch
+# density ('///' dense, '...' sparse) rather than by shade alone.
 def combined_adaptation_mitigation_plot(cluster_adap, rio_adapt1, rio_adapt2, cluster_miti, rio_miti1, rio_miti2, output_folder):
     years = list(range(2000, 2023))
     cluster_adap = cluster_adap[-len(years):]
     cluster_miti = cluster_miti[-len(years):]
-    fig, axs = plt.subplots(2, 1, figsize=(24,12), sharey=True)
-    axs[0].stackplot(years, [rio_adapt2, rio_adapt1], colors=['#fec44f','#fff7bc'], alpha=0.5)
-    axs[0].plot(years, cluster_adap, color='#d95f0e', linewidth=6)
-    axs[0].set_title('Adaptation Funding', fontsize=14)
-    axs[0].set_ylabel('Aggregated aid disbursements (billion USD)', labelpad=15, fontsize=12)
-    axs[0].set_xlim(2000,2023)
-    axs[0].set_ylim(0,23)
-    axs[0].set_xticks(np.arange(2000,2024,2))
+
+    # Cast to arrays so we can stack via fill_between
+    rio_adapt1_a = np.asarray(rio_adapt1, dtype=float)
+    rio_adapt2_a = np.asarray(rio_adapt2, dtype=float)
+    rio_miti1_a  = np.asarray(rio_miti1,  dtype=float)
+    rio_miti2_a  = np.asarray(rio_miti2,  dtype=float)
+
+    fig, axs = plt.subplots(1, 2, figsize=(24, 8), sharey=True)
+
+    # --- Adaptation panel ---
+    # Bottom layer: Rio markers PRINCIPAL — dense diagonal hatch
+    axs[0].fill_between(years, 0, rio_adapt2_a,
+                        facecolor='#fec44f', edgecolor='black',
+                        hatch='///', linewidth=0.6, alpha=0.7)
+    # Top layer: Rio markers SIGNIFICANT — sparse dot hatch, stacked on principal
+    axs[0].fill_between(years, rio_adapt2_a, rio_adapt2_a + rio_adapt1_a,
+                        facecolor='#fff7bc', edgecolor='black',
+                        hatch='...', linewidth=0.6, alpha=0.7)
+    # ClimateFinanceBERT line: colour + circular markers with black edge
+    axs[0].plot(years, cluster_adap,
+                color='#d95f0e', linewidth=3,
+                marker='o', markersize=9,
+                markerfacecolor='#d95f0e', markeredgecolor='black', markeredgewidth=1.2)
+    axs[0].set_title('Adaptation Funding', fontsize=18)
+    axs[0].set_ylabel('Aggregated aid disbursements (billion USD)', labelpad=15, color='#333333', fontsize=16)
+    axs[0].set_xlim(2000, 2023)
+    axs[0].set_ylim(0, 23)
+    axs[0].set_xticks(np.arange(2000, 2024, 2))
+    axs[0].tick_params(axis='both', labelsize=14)
+
     events = [(2010, 'USD 100bn target'), (2015, 'Paris Agreement')]
     for year, event in events:
-        axs[0].vlines(year, 0, 22, linestyle='--', color='#636363')
-        axs[0].text(year,21,event, ha='center')
-    axs[1].stackplot(years, [rio_miti2, rio_miti1], colors=['#addd8e','#f7fcb9'], alpha=0.5)
-    axs[1].plot(years, cluster_miti, color='#31a354', linewidth=6)
-    axs[1].set_title('Mitigation Funding', fontsize=14)
-    axs[1].set_ylabel('Aggregated aid disbursements (billion USD)', labelpad=15, fontsize=12)
-    axs[1].set_xlim(2000,2023)
-    axs[1].set_ylim(0,23)
-    axs[1].set_xticks(np.arange(2000,2024,2))
+        axs[0].vlines(x=year, ymin=0, ymax=22, linestyle='--', color='#636363')
+        axs[0].text(x=year, y=21, s=event, ha='center', fontsize=13)
+
+    # --- Mitigation panel ---
+    # Bottom layer: Rio markers PRINCIPAL — back-diagonal hatch (different orientation
+    # from adaptation, so a reader can also tell the panels apart by pattern)
+    axs[1].fill_between(years, 0, rio_miti2_a,
+                        facecolor='#addd8e', edgecolor='black',
+                        hatch='\\\\\\', linewidth=0.6, alpha=0.7)
+    # Top layer: Rio markers SIGNIFICANT — cross hatch
+    axs[1].fill_between(years, rio_miti2_a, rio_miti2_a + rio_miti1_a,
+                        facecolor='#f7fcb9', edgecolor='black',
+                        hatch='xxx', linewidth=0.6, alpha=0.7)
+    # ClimateFinanceBERT line: colour + square markers with black edge
+    axs[1].plot(years, cluster_miti,
+                color='#31a354', linewidth=3,
+                marker='s', markersize=9,
+                markerfacecolor='#31a354', markeredgecolor='black', markeredgewidth=1.2)
+    axs[1].set_title('Mitigation Funding', fontsize=18)
+    axs[1].set_xlim(2000, 2023)
+    axs[1].set_ylim(0, 23)
+    axs[1].set_xticks(np.arange(2000, 2024, 2))
+    axs[1].tick_params(axis='both', labelsize=14)
+
     for year, event in events:
-        axs[1].vlines(year, 0, 22, linestyle='--', color='#636363')
-        axs[1].text(year,21,event, ha='center')
+        axs[1].vlines(x=year, ymin=0, ymax=22, linestyle='--', color='#636363')
+        axs[1].text(x=year, y=21, s=event, ha='center', fontsize=13)
+
+    # Legend handles encode the same colour + pattern combination as the plot
     legend_list = [
-        Patch(facecolor='#d95f0e', label='ClimateFinanceBERT (Adaptation)'),
-        Patch(facecolor='#fec44f', label='Rio markers principal (Adaptation)'),
-        Patch(facecolor='#fff7bc', label='Rio markers significant (Adaptation)'),
-        Patch(facecolor='#31a354', label='ClimateFinanceBERT (Mitigation)'),
-        Patch(facecolor='#addd8e', label='Rio markers principal (Mitigation)'),
-        Patch(facecolor='#f7fcb9', label='Rio markers significant (Mitigation)')
+        mlines.Line2D([], [], color='#d95f0e', linewidth=3,
+                      marker='o', markersize=9,
+                      markerfacecolor='#d95f0e', markeredgecolor='black', markeredgewidth=1.2,
+                      label='ClimateFinanceBERT (Adaptation)'),
+        Patch(facecolor='#fec44f', edgecolor='black', hatch='///',
+              label='Rio markers principal (Adaptation)'),
+        Patch(facecolor='#fff7bc', edgecolor='black', hatch='...',
+              label='Rio markers significant (Adaptation)'),
+        mlines.Line2D([], [], color='#31a354', linewidth=3,
+                      marker='s', markersize=9,
+                      markerfacecolor='#31a354', markeredgecolor='black', markeredgewidth=1.2,
+                      label='ClimateFinanceBERT (Mitigation)'),
+        Patch(facecolor='#addd8e', edgecolor='black', hatch='\\\\\\',
+              label='Rio markers principal (Mitigation)'),
+        Patch(facecolor='#f7fcb9', edgecolor='black', hatch='xxx',
+              label='Rio markers significant (Mitigation)'),
     ]
-    fig.legend(handles=legend_list, loc='lower center', bbox_to_anchor=(0.5, -0.15), ncol=6, fontsize=14)
+    fig.legend(handles=legend_list, loc='lower center',
+               bbox_to_anchor=(0.5, -0.15), ncol=3, fontsize=14)
+
     plt.tight_layout()
-    plt.savefig(os.path.join(output_folder, 'combined_adaptation_mitigation_plot.png'), bbox_inches='tight')
+    plt.savefig(os.path.join(output_folder, 'combined_adaptation_mitigation_plot.png'),
+                bbox_inches='tight', dpi=300)
     plt.show()
 
 def analyze_combined_climate_finance(df_disbursement, df_commitment, output_folder):
-    date_range = pd.date_range(start=f'{df_disbursement["effective_year"].min()}/1/1',
-                               end=f'{df_disbursement["effective_year"].max()}/12/31', freq='Y')
+    """
+    Create combined analysis plots showing disbursements, commitments, and seasonal patterns
+    for each climate category.
+    
+    Parameters:
+    df_disbursement: DataFrame with disbursement data
+    df_commitment: DataFrame with commitment data
+    output_folder: Path to save the output figures
+    """
+    # Create date range
+    date_range = pd.date_range(start=f'{df_disbursement["effective_year"].min()}/1/1', 
+                              end=f'{df_disbursement["effective_year"].max()}/12/31', 
+                              freq='Y')
+    
+    # Define categories and their properties
     categories = {
-        'Adaptation': {'disbursement': 'adaptation_funding', 'commitment': 'adaptation_commitment',
-                       'color_disb': '#d95f0e', 'color_comm': '#fec44f'},
-        'Mitigation': {'disbursement': 'mitigation_funding', 'commitment': 'mitigation_commitment',
-                       'color_disb': '#2ca25f', 'color_comm': '#addd8e'},
-        'Environment': {'disbursement': 'environment_funding', 'commitment': 'environment_commitment',
-                        'color_disb': '#2b8cbe', 'color_comm': '#a6bddb'}
+        'Adaptation': {
+            'disbursement': 'adaptation_funding',
+            'commitment': 'adaptation_commitment',
+            'color_disb': '#d95f0e',
+            'color_comm': '#fec44f'
+        },
+        'Mitigation': {
+            'disbursement': 'mitigation_funding',
+            'commitment': 'mitigation_commitment',
+            'color_disb': '#2ca25f',
+            'color_comm': '#addd8e'
+        },
+        'Environment': {
+            'disbursement': 'environment_funding',
+            'commitment': 'environment_commitment',
+            'color_disb': '#2b8cbe',
+            'color_comm': '#a6bddb'
+        }
     }
-    fig, axes = plt.subplots(3, 3, figsize=(18,15))
+    
+    # Create the main figure with three rows and three columns
+    fig, axes = plt.subplots(3, 3, figsize=(24, 15))
     fig.suptitle('Climate Finance Analysis: Disbursements, Commitments, and Seasonal Patterns', fontsize=16, y=0.95)
+    
     for idx, (category, props) in enumerate(categories.items()):
-        disb_series = pd.Series(df_disbursement[props['disbursement']].values/1000, index=date_range).fillna(method='ffill').dropna()
-        comm_series = pd.Series(df_commitment[props['commitment']].values/1000, index=date_range).fillna(method='ffill').dropna()
+        # Prepare time series data (convert to billions)
+        disb_series = pd.Series(df_disbursement[props['disbursement']].values / 1000, index=date_range)
+        comm_series = pd.Series(df_commitment[props['commitment']].values / 1000, index=date_range)
+        
+        # Handle missing values
+        disb_series = disb_series.fillna(method='ffill').dropna()
+        comm_series = comm_series.fillna(method='ffill').dropna()
+        
+        # Decompose both series
         decomp_disb = seasonal_decompose(disb_series, period=2, model='additive')
         decomp_comm = seasonal_decompose(comm_series, period=2, model='additive')
-        axes[idx,0].plot(disb_series, label='Disbursements', color=props['color_disb'], linewidth=2)
-        axes[idx,0].plot(comm_series, label='Commitments', color=props['color_comm'], linewidth=2)
-        axes[idx,0].set_title(f'{category} Climate Finance')
-        axes[idx,0].set_ylabel('Billion USD')
-        axes[idx,0].legend()
-        axes[idx,0].grid(True, alpha=0.3)
-        axes[idx,1].plot(decomp_disb.trend, label='Disbursements Trend', color=props['color_disb'], linewidth=2)
-        axes[idx,1].plot(decomp_comm.trend, label='Commitments Trend', color=props['color_comm'], linewidth=2)
-        axes[idx,1].set_title(f'{category} Trends')
-        axes[idx,1].set_ylabel('Billion USD')
-        axes[idx,1].legend()
-        axes[idx,1].grid(True, alpha=0.3)
-        axes[idx,2].plot(decomp_disb.seasonal, label='Disbursements Seasonal', color=props['color_disb'], linewidth=2)
-        axes[idx,2].plot(decomp_comm.seasonal, label='Commitments Seasonal', color=props['color_comm'], linewidth=2)
-        axes[idx,2].set_title(f'{category} Seasonal Patterns')
-        axes[idx,2].set_ylabel('Billion USD')
-        axes[idx,2].legend()
-        axes[idx,2].grid(True, alpha=0.3)
+        
+        # Plot original time series (left panel)
+        axes[idx, 0].plot(disb_series, label='Disbursements', color=props['color_disb'], linewidth=2)
+        axes[idx, 0].plot(comm_series, label='Commitments', color=props['color_comm'], linewidth=2)
+        axes[idx, 0].set_title(f'{category} Climate Finance')
+        axes[idx, 0].set_ylabel('Billion USD')
+        axes[idx, 0].legend()
+        axes[idx, 0].grid(True, alpha=0.3)
+        
+        # Plot trends (middle panel)
+        axes[idx, 1].plot(decomp_disb.trend, label='Disbursements Trend', 
+                         color=props['color_disb'], linewidth=2)
+        axes[idx, 1].plot(decomp_comm.trend, label='Commitments Trend', 
+                         color=props['color_comm'], linewidth=2)
+        axes[idx, 1].set_title(f'{category} Trends')
+        axes[idx, 1].set_ylabel('Billion USD')
+        axes[idx, 1].legend()
+        axes[idx, 1].grid(True, alpha=0.3)
+        
+        # Plot seasonal patterns (right panel)
+        axes[idx, 2].plot(decomp_disb.seasonal, label='Disbursements Seasonal',
+                         color=props['color_disb'], linewidth=2)
+        axes[idx, 2].plot(decomp_comm.seasonal, label='Commitments Seasonal',
+                         color=props['color_comm'], linewidth=2)
+        axes[idx, 2].set_title(f'{category} Seasonal Patterns')
+        axes[idx, 2].set_ylabel('Billion USD')
+        axes[idx, 2].legend()
+        axes[idx, 2].grid(True, alpha=0.3)
+        
+        # Format x-axis to show years
         for ax in axes[idx, :]:
             ax.set_xlabel('Year')
             plt.setp(ax.get_xticklabels(), rotation=45)
+    
+    # Adjust layout
     plt.tight_layout()
-    fig.subplots_adjust(top=1)
+    fig.subplots_adjust(top=0.92)
+    
+    # Save figure
     output_path = os.path.join(output_folder, 'combined_climate_finance_analysis.png')
-    plt.savefig(output_path, dpi=500, bbox_inches='tight')
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
 
 def forecast_climate_finance_sarima(df_disbursement, output_folder, target_sum=35):

@@ -43,7 +43,6 @@ logging.info(f"Using device: {device}")
 # folder is one level up. Override `wd` manually if you reorganize the tree.
 _HERE = os.path.dirname(os.path.abspath(__file__))
 wd = os.path.abspath(os.path.join(_HERE, os.pardir, "Data"))
-os.chdir(wd)
 
 # Hyperparameters
 base_model = 'climatebert/distilroberta-base-climate-f'
@@ -66,7 +65,7 @@ training_args = {
 
 # Load dataset
 path = os.path.join(wd, "train_set.csv")
-df = pd.read_csv(path)
+df = pd.read_csv(path, sep=";")
 
 # Data preparation function
 def prepare_data(df, tokenizer, n_words, random_states, only_relevant_data):
@@ -315,11 +314,18 @@ for i, prediction in enumerate(preds):
 print(label_dict)
 print(classification_report(test_y, preds))
 
+# Save the fine-grained report (rows = class names, in label-index order)
+class_ids = list(range(len(label_dict)))
+pd.DataFrame(classification_report(test_y, preds, labels=class_ids,
+                                   target_names=[reverse_label_dict[i] for i in class_ids],
+                                   output_dict=True)).transpose() \
+    .to_csv(os.path.join(wd, "classification_reportmulticlassifier.csv"))
+
 # Save the label dictionary and reverse mapping to JSON files
-with open('dictionary_classes.json', 'w') as f:
+with open(os.path.join(wd, 'dictionary_classes.json'), 'w') as f:
     f.write(json.dumps(label_dict))
 
-with open('reverse_dictionary_classes.json', 'w') as f:
+with open(os.path.join(wd, 'reverse_dictionary_classes.json'), 'w') as f:
     f.write(json.dumps(reverse_label_dict))
 
 # Get more generic predictions
@@ -337,5 +343,9 @@ for pred in preds:
 # Print the classification report on the test set for more generic categories
 print("Generic Classification Report:")
 print(classification_report(test_y_generic, preds_generic))
+
+# Save the macro-category report used in the paper's classifier-performance table
+pd.DataFrame(classification_report(test_y_generic, preds_generic, output_dict=True)).transpose() \
+    .to_csv(os.path.join(wd, "classification_reportmulticlassifier_gen.csv"))
 
 

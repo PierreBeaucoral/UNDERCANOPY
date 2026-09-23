@@ -1,33 +1,16 @@
-rm(list = ls())
-
 library(here)
 
-# Define the desired working directory path.
-# Resolves automatically to 'Climate finance estimation/Raw Data' relative to
-# the repository root (detected by here() via the .here/.git anchor). If no
-# anchor is reachable, falls back to the current working directory -- in that
-# case, set `wd` by hand to 'PATH/TO/UNDERCANOPY/Climate finance estimation/Raw Data'.
-wd <- tryCatch(
-  here::here("Climate finance estimation", "Raw Data"),
-  error = function(e) getwd()  # <-- set this manually if here() cannot anchor
-)
+# Fixed seed: only affects the 10,000-row preview draw written to
+# DataPBsample.csv (sample() below). DataPB.csv is the full data and does not
+# depend on the seed.
+set.seed(20240827L)
 
-# Get the current working directory
-current_wd <- getwd()
-
-# Check if the current working directory is different from the desired directory
-if (current_wd != wd) {
-  # If different, set the working directory to the desired directory
-  setwd(wd)
-  print(paste("Changed working directory to:", getwd()))
-} else {
-  # If already in the desired directory, print a message indicating the current directory
-  print(paste("Current working directory is already set to:", getwd()))
-}
+# All paths are resolved with here::here() from the repository root (the repo
+# ships a `.here` sentinel).
 
 #### 0- Import data from .cvs files#### 
 
-source("UploadBase.R")
+source(here::here("Climate finance estimation", "Raw Data", "UploadBase.R"))
 gc()
 
 
@@ -81,6 +64,6 @@ Data$raw_text <- gsub("_", "", Data$raw_text)
 # Create a subsample for beta-testing
 rand_df <- Data[sample(nrow(Data), size=10000), ]
 
-write.table(Data, "./DataPB.csv", sep="|")
-write.table(rand_df, "./DataPBsample.csv", sep="|")
+write.table(Data, here::here("Climate finance estimation", "Raw Data", "DataPB.csv"), sep="|")
+write.table(rand_df, here::here("Climate finance estimation", "Raw Data", "DataPBsample.csv"), sep="|")
 gc()

@@ -1,18 +1,36 @@
 # External data for the Econometrics revision
 
 Two raw inputs used by the revised estimation scripts are too large to ship in
-this repository. Download them from the project drive and place them in
-`Econometrics/Data/` before running the scripts.
+this repository. Both must sit in `Econometrics/Data/` before running the
+scripts.
 
-**Drive:** <https://drive.uca.fr/d/6058b184ba134a02a708/>
+**Drive:** <https://drive.uca.fr/d/6058b184ba134a02a708/>. The drive holds
+`Archive.zip`, `ClassifiedCRS.csv.zip`, `climate_finance_total.csv.zip`, and the
+two model-weight files (`.pt`). `DataPB.csv` is **not** on the drive.
 
-| File | Expected location | Role |
-|------|-------------------|------|
-| `DataPB.csv` | `Econometrics/Data/DataPB.csv` | Consolidated OECD CRS extract (Rio-marker source). Loaded as `Rio_Data` in `HurdleRegHuei_parallel.R` and `HurdleRegHuei_parallel_robustness.R` to build the Rio adaptation/mitigation panels (reg2 / reg5). |
-| `climate_finance_total.csv` | `Econometrics/Data/climate_finance_total.csv` | ClimateFinanceBERT-classified CRS projects. Loaded as `ClimateBERT` in the same two scripts to build the BERT adaptation/mitigation panels (reg3 / reg6). |
+| File | How to obtain it | Expected location(s) | Role |
+|------|------------------|----------------------|------|
+| `DataPB.csv` | Rebuild from the raw OECD CRS files with `Climate finance estimation/Raw Data/Treatment.R` (see "Rebuilding `DataPB.csv`" below). | `Econometrics/Data/DataPB.csv` and `Climate finance estimation/Data/DataPB.csv` | Consolidated OECD CRS extract (Rio-marker source). Loaded as `Rio_Data` in `HurdleRegHuei_parallel.R`, `HurdleRegHuei_parallel_robustness.R` and the original-paper script `Estimations.R` to build the Rio adaptation/mitigation panels (reg2 / reg5). Also read by `Climate finance estimation/Figures/graph_final.py`. |
+| `climate_finance_total.csv` | Download `climate_finance_total.csv.zip` from the drive and unzip it (about 21.5 GB once unzipped). | `Econometrics/Data/climate_finance_total.csv` (and `Climate finance estimation/Data/climate_finance_total.csv` for `graph_final.py`) | ClimateFinanceBERT-classified CRS projects. Loaded as `ClimateBERT` in the same three scripts to build the BERT adaptation/mitigation panels (reg3 / reg6). |
 
-In both scripts the load lines are marked with the comment
-`# external: download from https://drive.uca.fr/d/6058b184ba134a02a708/`.
+In the three scripts, the `climate_finance_total.csv` load line carries the comment
+`# external: download from https://drive.uca.fr/d/6058b184ba134a02a708/`, and the
+`DataPB.csv` load line points to `Treatment.R`, which rebuilds it as described below.
+
+### Rebuilding `DataPB.csv`
+
+1. Place the raw OECD CRS text files in `Climate finance estimation/Raw Data/CRS/`
+   (exact names in the last section of this file).
+2. Run `Rscript "Climate finance estimation/Raw Data/Treatment.R"` from the
+   repository root. It sources `UploadBase.R` and writes
+   `Climate finance estimation/Raw Data/DataPB.csv` (plus the 10,000-row preview
+   `DataPBsample.csv`).
+3. Copy the file to the two locations where it is read:
+
+```bash
+cp "Climate finance estimation/Raw Data/DataPB.csv" Econometrics/Data/DataPB.csv
+cp "Climate finance estimation/Raw Data/DataPB.csv" "Climate finance estimation/Data/DataPB.csv"
+```
 
 ## `Data.zip` must be unzipped first
 
@@ -49,3 +67,16 @@ resolve:
 Climate finance estimation/Raw Data/Adaptation with gravity vars amended FULL Feb 14 2023.csv
 Climate finance estimation/Raw Data/Mitigation with gravity vars amended FULL Feb 14 2023.csv
 ```
+
+## Raw OECD CRS files (needed to rebuild `DataPB.csv`)
+
+`Climate finance estimation/Raw Data/UploadBase.R` (sourced by `Treatment.R`)
+reads the raw OECD CRS bulk text files, which are not shipped. Download them
+from the [OECD Data Explorer (CRS)](https://data-explorer.oecd.org/vis?fs[0]=Topic%2C1%7CDevelopment%23DEV%23%7COfficial%20Development%20Assistance%20%28ODA%29%23DEV_ODA%23&pg=0&fc=Topic&bp=true&snb=26&df[ds]=dsDisseminateFinalCloud&df[id]=DSD_CRS%40DF_CRS&df[ag]=OECD.DCD.FSD&df[vs]=1.3&dq=DAC..1000.100._T._T.D.Q._T..&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false)
+and place them in `Climate finance estimation/Raw Data/CRS/` under these exact
+names (note the capital `D` in the yearly files):
+
+| File | Expected location | Role |
+|------|-------------------|------|
+| `CRS 1973-94 data.txt`, `CRS 1995-99 data.txt`, `CRS 2000-01 data.txt`, `CRS 2002-03 data.txt`, `CRS 2004-05 data.txt` | `Climate finance estimation/Raw Data/CRS/` | Multi-year CRS extracts, loaded one by one in `UploadBase.R`. |
+| `CRS 2006 Data.txt` … `CRS 2021 Data.txt` (one per year) | `Climate finance estimation/Raw Data/CRS/` | Yearly CRS extracts, loaded in the `for (i in Yearly)` loop of `UploadBase.R`. |

@@ -41,7 +41,7 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
    - **Auxiliary Files:**  
      JSON label dictionaries (e.g., `reverse_dictionary_classes.json`) and pre-trained model weights (`saved_weights_relevance.pt`, `saved_weights_multiclass.pt`).
 
-   > **Note:** Due to their size, key raw, intermediate and final data files (including DataPB, Data, ClassifiedCRS, ClimateFinanceTotal, and the model weight files) are not stored directly in this repository. They are available at:  
+   > **Note:** Due to their size, key raw, intermediate and final data files (including DataPB, Data, ClassifiedCRS, ClimateFinanceTotal, and the model weight files) are not stored directly in this repository. ClassifiedCRS, ClimateFinanceTotal and the model weights are on the external drive; DataPB is not on the drive and is rebuilt with `Raw Data/Treatment.R` (see `Data/readme.md`). Drive:  
    > [This drive](https://drive.uca.fr/d/6058b184ba134a02a708/)
 
     > **Please download all the files and add it in the required folder according to the directory map available here**
@@ -52,7 +52,7 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
 
 ### Data Preparation
 1. **Download Raw Data:**  
-   Obtain the original OECD CRS raw text files (annual and multi-year) from the OECD website. Place them in the `Raw Data` folder.
+   Obtain the original OECD CRS raw text files (annual and multi-year) from the OECD website. Place them in `Raw Data/CRS/` under the exact names listed in `Econometrics/external-data.md`.
 2. **Run R Preprocessing:**  
    - First, execute `Treatment.R` to load and merge the raw CRS files.
   
@@ -63,7 +63,7 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
      def install_requirements():
          import subprocess, sys
          try:
-             subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", '/UNDERCANOPY/Climate finance estimation/requirements.txt'])
+             subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", 'Climate finance estimation/requirements.txt'])
              print("Requirements installed successfully.")
          except subprocess.CalledProcessError as e:
              print("Failed to install requirements:", e)
@@ -75,12 +75,13 @@ The Climate Finance Estimation pipeline is organized into several interrelated c
    The model weights (`saved_weights_relevance.pt` and `saved_weights_multiclass.pt`) are available from the external drive:
    [https://drive.uca.fr/d/6058b184ba134a02a708/](https://drive.uca.fr/d/6058b184ba134a02a708/)
 3. **Run Python Pipelines:**  
-   - Execute `EstimationClimateFinance.py` (if applicable) to perform financial estimation and forecasting.
-   - Execute `Relevance_classifier.py` or related scripts to fine-tune and evaluate the models.
-   - Execute `Multi-classifier.py` or related scripts to fine-tune and evaluate the models.
-   - Execute `Classify.py` to run the classification pipeline.
-   - Execute `Meta.py` to run the meta categories pipeline.
-   - Execute `Graph_Final.py` to run the classification pipeline.
+   Scripts are in `Training and Classifying/` unless noted; run them in this order:
+   1. `EstimationClimateFinance.py`: builds the balanced training set `Data/train_set.csv` from `Data/projects_clusters.csv`.
+   2. `Relevance_classifier.py`: fine-tunes and evaluates the relevance (binary) classifier.
+   3. `multi-classifier.py`: fine-tunes and evaluates the multiclass classifier and writes the label dictionaries.
+   4. `Classify.py`: classifies the full CRS corpus (`Data/Data.csv`) and writes `Data/ClassifiedCRS.csv`.
+   5. `meta.py`: assigns the meta-categories (Adaptation, Mitigation, Environment) and writes `Data/climate_finance_total.csv`.
+   6. `Figures/graph_final.py`: draws the descriptive figures and the SARIMA forecast from `Data/DataPB.csv` and `Data/climate_finance_total.csv` (see `Figures/readme.md`).
 
 
 ### Overall Workflow

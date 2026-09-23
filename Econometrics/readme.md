@@ -32,11 +32,12 @@ The script is organized into the following major steps:
      These results are merged into a single summary table and exported as a CSV file. In addition, formatted regression tables are produced using the `texreg` package for reporting.
 
 3. **Exporting Results:**
-   - Several CSV files are saved in the `./Results/mitigation/` or `./Results/adaptation/` folder, including:
-     - Combined regression result tables (e.g., `combined_regression_results2_mitigation.csv`, `combined_regression_results3_mitigation.csv`)
-     - Formatted regression tables (exported via `texreg` to a text file)
-     - Individual regression datasets (`reg1_mitigation.csv`, `reg2_mitigation.csv`, `reg3_mitigation.csv`)
-     - A summary CSV (`summary_sample.csv`) that merges attributes from different model outputs.
+   - All outputs go to `Econometrics/Results/`:
+     - Combined regression result tables in `Results/adaptation/` and `Results/mitigation/` (e.g., `combined_regression_results2_mitigation.csv`, `combined_regression_results3_mitigation.csv`)
+     - Formatted regression tables (exported via `texreg` to text files at the root of `Results/`, e.g. `Rio Result for Mitigation`)
+     - Individual regression datasets (`reg1.csv` … `reg3.csv`, `reg1_mitigation.csv` … `reg3_mitigation.csv`) at the root of `Results/`
+     - A summary CSV (`Results/summary_sample.csv`) that merges attributes from different model outputs.
+   - The `reg*.csv` files in `Results/` are regenerated intermediates: `Estimations.R` rewrites them on every run and they are not part of the shipped outputs.
 
 ---
 
@@ -80,18 +81,18 @@ The script is organized into the following major steps:
 2. **Install Required Packages:**
    - This script requires several R packages, including:
      ```r
-     install.packages(c("readr", "data.table", "dplyr", "ggplot2", "fastDummies", "mhurdle", "texreg", "tidyverse", "countrycode"))
+     install.packages(c("here", "readr", "data.table", "dplyr", "ggplot2", "fastDummies", "mhurdle", "texreg", "tidyverse", "countrycode"))
      ```
    - Load additional packages as needed.
 
 3. **Set Up and Run the Script:**
    - Open R or RStudio.
-   - Set the working directory to the project folder.
+   - No working directory needs to be set: all paths resolve from the repository root with `here::here()`. Inputs are read from `Econometrics/Data/` (`DataPB.csv`, `climate_finance_total.csv`, see `external-data.md`) and `Climate finance estimation/Raw Data/` (gravity files).
    - Run the script:
      ```r
-     source("YourDeterminantsAnalysisScript.R")
+     source(here::here("Econometrics", "Estimations.R"))
      ```
-   - The script will execute the regression analyses, generate output tables, and export results to the `./Results/` folder.
+   - The script will execute the regression analyses, generate output tables, and export results to the `Econometrics/Results/` folder.
 
 4. **Review Outputs:**
    - Check the CSV files and regression tables to ensure that the results are as expected.
@@ -99,7 +100,19 @@ The script is organized into the following major steps:
 
 ---
 
-## Revised analysis (2025 revision)
+## Two result folders: original paper vs. revision
+
+| Folder | Version of the paper | Produced by |
+|--------|----------------------|-------------|
+| `Results/` | **Original submission** (outputs as shipped in April 2025). | `Estimations.R` |
+| `regressions/` | **Revision (2026, first-round R&R) — the version currently under review.** | `HurdleRegHuei_parallel.R`, `HurdleRegHuei_parallel_robustness.R`, `select_variables.R`, `HurdleRegHuei_selected.R`, `Identification/*.R` |
+
+To reproduce the paper under review, use `regressions/` and the run order below.
+The revision scripts never write to `Results/`: their `texreg` text tables
+(`Baseline/Rio/ClimateFinanceBERT Result for ...`) go to `regressions/main/texreg/`
+and `regressions/robustness/texreg/`.
+
+## Revised analysis (2026 revision, first-round R&R)
 
 The paper revision adds a larger estimation, identification, and average-partial-
 effects (APE) layer on top of the original `Estimations.R`. All revised scripts
@@ -109,12 +122,13 @@ no `.git`). Run them in this order:
 
 1. **Prepare data.** Unzip `Data/Data.zip` into `Econometrics/Data/` (gives the
    six `reg*.csv` panels), unzip the gravity files in
-   `Climate finance estimation/Raw Data/`, and download the two external inputs
-   (`DataPB.csv`, `climate_finance_total.csv`) into `Econometrics/Data/` — see
-   `external-data.md`.
+   `Climate finance estimation/Raw Data/`, and put the two external inputs in `Econometrics/Data/`:
+   `climate_finance_total.csv` (download from the drive) and `DataPB.csv`
+   (rebuilt with `Climate finance estimation/Raw Data/Treatment.R`; it is not on
+   the drive) — see `external-data.md`.
 2. **`HurdleRegHuei_parallel.R`** — main double-hurdle estimation. Writes the
    headline tables to `regressions/main/` (and re-writes the six `reg*.csv`
-   panels to `Data/`).
+   panels to `Data/` and the `texreg` text tables to `regressions/main/texreg/`).
 3. **`HurdleRegHuei_parallel_robustness.R`** — robustness re-estimation. Writes
    to `regressions/robustness/`.
 4. **`select_variables.R`** — Han→BERT variable selection. Writes the manifest
@@ -128,7 +142,10 @@ no `.git`). Run them in this order:
 
 See `regressions/readme.md` and `Identification/readme.md` for the full mapping
 of scripts to outputs. Heavy diagnostic `.rds` objects are not shipped and
-regenerate on run. The original `Estimations.R` is unchanged.
+regenerate on run. The original `Estimations.R` is unchanged apart from its
+file paths, which now also resolve with `here::here()` (its `texreg` text tables
+now land at the root of `Results/`, where the shipped copies sit), and its
+`library()` calls, which are all at the top of the script.
 
 ---
 

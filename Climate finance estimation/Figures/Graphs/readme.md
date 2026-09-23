@@ -7,7 +7,7 @@ This folder contains all key figures produced by the Climate Finance Estimation 
 ## Graphical Outputs
 
 ### 1. Climate Finance Forecast (SARIMA)
-![Climate Finance Forecast SARIMA](climate_finance_forecast_sarima.png)
+![Climate Finance Forecast SARIMA](forecasts/climate_finance_forecast_sarima.png)
 - **Description:**  
   This graph presents a time series forecast of climate finance disbursements using a SARIMA model. Historical funding trends are plotted alongside forecasted values, with a vertical line indicating the projected year when a specific funding target is met.
 

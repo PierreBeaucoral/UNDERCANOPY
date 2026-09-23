@@ -53,5 +53,6 @@ download without `.git`). Outputs therefore always land back in this tree.
 `aipw*/diagnostics.rds`, `lee_bounds*/bounds_diagnostics.rds`,
 `ape/ape_diagnostics.rds`, `selected/slim_models.rds`,
 `selected/slim_uncorr.rds`, `selected/slim_corr.rds`,
-`common_support/cells_C_*.rds`, and any `ape/ARCHIVE/`. These are large
+`common_support/cells_C_*.rds`, any `ape/ARCHIVE/`, and the `texreg` text
+tables written to `main/texreg/` and `robustness/texreg/`. These are large
 intermediate objects; the scripts recreate them when run.
